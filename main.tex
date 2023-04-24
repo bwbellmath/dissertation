@@ -1,0 +1,1249 @@
+\documentclass[10pt]{extarticle}
+\usepackage[letterpaper, bottom=1.4in]{geometry}
+\usepackage{import}
+
+\usepackage{enumerate}
+\usepackage[table]{xcolor}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage{mathrsfs}
+\usepackage{multirow}
+\usepackage{hhline}
+\usepackage{pbox}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{amsmath,amssymb,amsthm,esint}
+\usepackage{longtable}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{pgfplots}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{empheq}
+\usepackage{indentfirst}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\usepackage[many]{tcolorbox}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\newcommand{\wto}{\rightharpoonup}
+
+\usepackage{makeidx}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{acknowledgement}[theorem]{Acknowledgement}
+%\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{case}[theorem]{Case}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conclusion}[theorem]{Conclusion}
+\newtheorem{condition}[theorem]{Condition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{conditions}[theorem]{Conditions}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}{Exercise}
+\newtheorem{lemma}[theorem]{Lemma}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+%\usepackage{mathabx}
+
+
+%%%%%%%%%%%%%%%% TIKZ stuff %%%%%%%%%%%%%%%%
+    \pgfplotsset{compat=newest}
+    \usetikzlibrary{shapes,arrows,matrix,positioning,intersections}
+    \usetikzlibrary{calc}
+%    \usetikzlibrary{decorations.pathreplacing}
+    \usetikzlibrary{decorations} %fancier tikz abilities
+    \pgfdeclarelayer{bg}
+    \pgfsetlayers{bg,main}
+		% Define block styles
+    \tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+        text width=3cm, text badly centered, node distance=3cm, inner sep=0pt]
+    \tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+        text width=3cm, text centered, rounded corners, minimum height=2em]
+    \tikzstyle{line} = [draw, -latex']
+    \tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+        minimum height=2em]
+
+\usetikzlibrary{decorations.text,arrows.meta}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{decorations.markings} %hopefully give arrows
+
+\tikzset{
+  % style to apply some styles to each segment of a path
+  on each segment/.style={
+    decorate,
+    decoration={
+      show path construction,
+      moveto code={},
+      lineto code={
+        \path [#1]
+        (\tikzinputsegmentfirst) -- (\tikzinputsegmentlast);
+      },
+      curveto code={
+        \path [#1] (\tikzinputsegmentfirst)
+        .. controls
+        (\tikzinputsegmentsupporta) and (\tikzinputsegmentsupportb)
+        ..
+        (\tikzinputsegmentlast);
+      },
+      closepath code={
+        \path [#1]
+        (\tikzinputsegmentfirst) -- (\tikzinputsegmentlast);
+      },
+    },
+  },
+  % style to add an arrow in the middle of a path
+  mid arrow/.style={postaction={decorate,decoration={
+        markings,
+        mark=at position .5 with {\arrow[#1]{stealth}}
+      }}},
+}
+
+%%%%%%%%%%%%%%%% Table of Contents Stuff %%%%%%%%%%%%%%%%
+\setcounter{secnumdepth}{3} % if set to -1 only chapter and sections will be numbered
+\setcounter{tocdepth}{4}
+
+%%%%%%%%%%%%%%%% Hyper Ref Stuff %%%%%%%%%%%%%%%%
+		% set up reference style
+\hypersetup{
+    linktoc=all,		% build toc with internal links
+    unicode=false,         	% non-Latin chars in Acrobat bookmarks
+    pdftoolbar=true,       	% show Acrobats toolbar?
+    pdfmenubar=true,       	% show Acrobats menu?
+    pdffitwindow=false,    	% window fit to page when opened
+    pdfstartview={FitH},   	% fits width of page to the window
+    pdftitle={My title},   	% title
+    pdfauthor={Author},    	% author
+    pdfsubject={Subject},  	% subject of the document
+    pdfcreator={Creator},  	% creator of the document
+    pdfproducer={Producer},	% producer of the document
+    pdfkeywords={keyword1} {key2} {key3}, % list of keywords
+    pdfnewwindow=true,      	% links in new window
+    colorlinks=true,       	% false: boxed links; true: colore links
+    linkcolor=blue,          	% color of internal links (change box
+				% color with linkbordercolor)
+    citecolor=green,        	% color of links to bibliography
+    filecolor=magenta,      	% color of file links
+    urlcolor=cyan           	% color of external links
+}
+
+%%%%%%%%%%%%%%%% My Commands/Shorthand %%%%%%%%%%%%%%%%
+% \newcommand{\qed}{\hfill\ensuremath{\Box}}
+
+% \newcommand{\qedb}{\hfill \blacksquare}
+% \newcommand{\LIM}{\text{LIM}}
+% \newcommand{\wrt}{w.r.t}
+% \newcommand{\rml}{\multicolumn{1}{c}{}}
+% \newcommand{\tbf}[1]{\textbf{#1}}
+% \newcommand{\ib}[1]{\item \textbf{#1}}
+% \newcommand{\B}{\mathcal{B}}
+% \newcommand{\R}{\mathbb{R}}
+
+% \newcommand{\K}{\mathbb{K}}
+% \newcommand{\F}{\mathbb{F}}
+% \newcommand{\re}{\text{Re}}
+% %\newcommand{\Z}{\mathbb{Z}}
+% \newcommand{\TT}{\mathbb{T}}
+% \newcommand{\T}{\mathcal{T}}
+% %\newcommand{\S}{\mathcal{S}}
+% \newcommand{\N}{\mathbb{N}}
+% \newcommand{\M}{\mathcal{M}}
+% \newcommand{\MO}{\mathcal{O}}
+% \newcommand{\prob}{\text{Prob}}
+% \newcommand{\var}{\text{Var}}
+% \newcommand{\Q}{\mathbb{Q}}
+% \newcommand{\C}{\mathbb{C}}
+% \newcommand{\E}{\mathcal{E}}
+% \newcommand{\fl}{\text{fl}}
+% \newcommand{\sign}{\text{sign}}
+% \newcommand{\norm}[1]{\left\lvert #1 \right\rvert}
+% \newcommand{\Norm}[1]{\left\lVert #1 \right\rVert}
+\usepackage{bbm}
+\newlength{\arrow}
+\settowidth{\arrow}{\scriptsize argmax}
+\newcommand*{\myrightarrow}[1]{\xrightarrow{\mathmakebox[\arrow]{#1}}}
+
+
+% \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+%             \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+% \newcommand{\nifty}{\textbf{NIFTY}}
+
+
+
+
+\tcbset{breakable,
+skin=bicolor,
+colback=black!15!white,
+colbacklower=white,
+colframe=black!25!white,
+coltitle=black,
+fonttitle=\bfseries,
+boxrule=1pt,
+boxsep=3.0pt,
+left=0.0pt,
+right=0.0pt,
+top=0.0pt,
+bottom=0.0pt,
+middle = 1.0pt,
+arc = 0.0pt,
+outer arc = 0.0pt,
+frame style={top color=white,
+bottom color=white,draw=black},
+interior style={left color=black!0!white,right color=black!0!white},
+segmentation style={right color=white,left color=white}
+}
+
+\DeclareMathOperator{\Tr}{Tr}
+
+
+\author{Brian Bell : University of Arizona}
+\date{\today}
+\title{Neighborhoods of Adversarial Examples}
+
+%%%%%%%%%%%%%%%% Title Stuff %%%%%%%%%%%%%%%%
+
+% \IfFileExists{/dev/null}{\import{"\string~/Dropbox/UOFA/"}{headder}}{\import{"\string~/Google Drive/dropbox/Dropbox/UOFA/"}{headder}}
+
+
+
+
+\makeindex
+\usepackage[totoc]{idxlayout}%\makenoidxglossaries
+%\makeglossaries
+%\renewcommand{\baselinestretch}{1.5}
+\setlength\parindent{24pt}
+
+%%%%%%%%%%%%%%%% Color commands %%%%%%%%%%%%%%%%
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
+
+%%%%%%%%%%%%%%%% My Commands/Shorthand %%%%%%%%%%%%%%%%
+%\newcommand{\qed}{\hfill\ensuremath{\Box}}
+\newcommand{\qedb}{\hfill \blacksquare}
+\newcommand{\wrt}{w.r.t}
+\newcommand{\rml}{\multicolumn{1}{c}{}}
+\newcommand{\tbf}[1]{\textbf{#1}}
+\newcommand{\ib}[1]{\item \textbf{#1}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\re}{\text{Re}}
+%\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\TT}{\mathbb{T}}
+\newcommand{\T}{\mathcal{T}}
+%\newcommand{\S}{\mathcal{S}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\MO}{\mathcal{O}}
+\newcommand{\prob}{\text{Prob}}
+\newcommand{\var}{\text{Var}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\fl}{\text{fl}}
+\newcommand{\sign}{\text{sign}}
+\newcommand{\relu}{\text{ReLU}}
+\newcommand{\norm}[1]{\left\lvert #1 \right\rvert}
+\newcommand{\Norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\ip}[1]{\left\langle #1 \right\rangle}
+\def\tesst{https://chrome.google.com/webstore/detail/slack-bot-filter/blephhkggdennbfmdcjmlfimedknghfc}
+\def\lvector#1{\underline{#1}}
+\def\lmatrix#1{\underline{\underline{#1}}}
+\def\ltensor#1{\underline{\underline{\underline{#1}}}}
+\DeclareMathOperator\vol{\text{vol}}
+\newcommand{\e}{\varepsilon}
+
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+\newcommand{\nifty}{\textbf{NIFTY}}
+
+
+
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, fill=blue!20,
+    text width=3cm, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20,
+    text width=3cm, text centered, rounded corners, minimum height=2em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+    minimum height=2em]
+
+\newcommand\setrow[5]{
+  \setcounter{col}{1}
+  \foreach \n in {#1, #2, #3, #4, #5}{%, #6, #7, #8, #9} {
+    \edef\x{\value{col} +.5}
+    \edef\y{.5 + \value{row}}
+    \node[anchor=center] at (\x, \y) {\n};
+    \stepcounter{col}
+  }
+  \stepcounter{row}
+}
+\usepackage{mathpazo}
+\newcounter{row}
+\newcounter{col}
+
+% \usepackage{enumerate}
+% \newcommand{\e}{\varepsilon}
+% \newcommand{\R}{\mathbb{R}}
+ %\newcommand{\T}{\mathcal{T}}
+% \newcommand{\N}{\mathbb{N}}
+% \newcommand{\prob}{\text{Prob}}
+% \newcommand{\Q}{\mathbb{Q}}
+% \newcommand{\C}{\mathbb{C}}
+% \newcommand{\norm}[1]{\lvert #1 \rvert}
+% \newcommand{\Norm}[1]{\lVert #1 \rVert}
+% \newcounter{test}
+ \def\layersep{2.0cm}
+
+
+% %\documentclass{beamer}
+
+% \mode<presentation>
+% {
+%   \usetheme{Boadilla}
+%   % possiblities Singapore, Malmoe, Dresden
+%   \setbeamercovered{transparent}
+% }
+
+
+% %\setbeamertemplate{navigation symbols}{}
+% % removes the navigation symbols
+
+% %color setting more or less matching U of A colors
+% \setbeamercolor*{palette secondary}{use=structure,fg=white,bg=structure.fg!55!black}
+% \setbeamercolor*{palette tertiary}{use=structure,fg=white,bg=red!50!black}
+
+% \usepackage[english]{babel}
+% \usepackage[latin1]{inputenc}
+% \usepackage{times}
+% \usepackage[T1]{fontenc}
+% \usepackage{graphicx}
+% \usepackage{amsfonts}
+% \usepackage{transparent}
+% \usepackage{tikz}
+% \usetikzlibrary{arrows,positioning,backgrounds,fit}
+
+
+
+\begin{document}
+\titlepage
+\maketitle
+\tableofcontents
+
+\part{Persistence}
+\section{Artificial Neural Networks ANNs}
+\section{Adversarial Attacks}
+\section{Defining adversarial attacks mathematically}
+\section{Persistence metric for Adversarial Attacks}
+\section{Persistence results}
+%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+Artificial Neural Networks and other optimization-based general
+function approximation models are the core of modern
+machine learning \cite{prakash2018}. These models have dominated competitions in image processing, optical character recognition, object detection, video classification, natural language processing, and many other fields \cite{SCHMIDHUBER201585}. All such modern models are
+trained via gradient-based optimization, e.g. Stochastic Gradient Descent (SGD) with
+gradients computed via back propagation. \cite{goodfellow2013multidigit}. Although the performance of these models is practically
+miraculous within the training and testing context for which they are designed, they have a few intriguing properties. It was discovered in 2013 
+\cite{Szegedy2013} that images can be generated
+which apparently trick such models in a classification context in  difficult-to-control ways \cite{Khoury2018}. The intent of this
+research is to investigate these \emph{adversarial examples} in a
+mathematical context and use them to study pertinent 
+properties of the learning models from which they arise.
+
+\section{Artificial Neural Networks (ANNs)}
+
+%\subsection{A Brief History of Neural Networks (NNs)}
+
+The history of Neural Networks begins in the field of Theoretical Neuropsychology with a much-cited paper by McCulloch and Pitts in which they describe the mechanics of cognition in the context of computation \cite{mcculloch1943logical}. This initial framework for computational cognition did not include a notion for learning, but the following decade brought the concept of learning (as optimization) and many simple NNs (linear regression models applied to computational cognition). The perceptron, the most granular element of a neural network, was proposed in another much-cited paper by Rosenblatt in 1958 \cite{rosenblatt1958perceptron}, and multilevel (deep) networks were proposed by 1965 in a paper by Ivakhnenko and Lapa \cite{ivakhnenko1965cybernetic}. 
+
+By the 1960s, these neural network models became disassociated from the cutting-edge of cognitive science, and interest had shifted to their application in modeling and industrial computation. The hardware limitations of the time served as a significant barrier to wider application and the concept of the "neural network" was sometimes treated as a solution looking for a problem. Compounding these limitations was a significant roadblock published by Minsky and Papert in 1969: A proof that basic perceptrons could not encode exclusive-or \cite{minsky1969perceptrons}. As a result, interest in developing neural network theory waned. The next necessary step in the development of modern neural network models was an advance that would allow them to be trained efficiently with computing power available. Learning methods required a gradient, and the technique necessary for computing gradients of large-scale multi-parameter models was apparently proposed in a 1970 in a Finnish masters thesis \cite{linnainmaa1970representation}. Techniques from control theory were applied to develop a means of propagating error backward through models which could be described as directed graphs. The idea was applied to neural networks by a Harvard student Paul Werbos\cite{werbos1974beyond} and refined in later publications. 
+
+The final essential puzzle piece for neural network models was to take advantage of their layered structure, which would allow backpropagation computations at a given layer to be done in parallel. This key insight, indeed the core of much of modern computing, was a description of parallel and distributed processing in the context of cognition by Rumelhard and McClelland in 1986 \cite{mcclelland1986parallel} with an astonishing 22,453 citations (a number that grows nearly every day). With these pieces in place, the world was ready for someone to finally apply neural network models to a relevant problem. In 1989, Yann LeCun and a group at Bell Labs managed to do just that. LeCun  refined backpropagation into the form it is used today \cite{lecun1989backpropagation}, invented Convolutional Neural Networks \ref{cnn} \cite{lecun1995convolutional}, and by 1998, he had worked with his team to implement what has  become the industry standard for banks to recognize hand-written numbers on checks \cite{lecun1998gradient}. 
+
+Starting in the 2000s, neural networks have blown up in scale and application, so it's harder to keep track of the discrete historical developments. Most of the progress in terms of performance and application has come from contests (e.g: \url{http://image-net.org/challenges/LSVRC/}) in which a bounty (or publicity) is offered and labs around the world compete to build a network which solves the competition's problem. Schimdhuber's group \cite{SCHMIDHUBER201585}, and a similar group at Google have dominated many of these competitions. The cutting-edge today is represented by networks like Inception v4 designed by Google for image classification  which contains approximately 43 million parameters  \cite{Szegedy2013}. Early versions of this network took 1-2 million dollars worth of compute-time to train. ANNs now appear in nearly every industry from devices which use ANNs to intelligently adapt their performance, to the sciences which rely on ANNs to eliminate tedious sorting and identification of data that previously had to be relegated to humans.
+
+\subsection{Structure}
+In this section we give a mathematical description of artificial neural networks. 
+
+%TODO: change this definition to something very vague and general -- use wikipedia 
+A \emph{neuron} is a nonlinear operator that takes input in $\R^n$ to $\R$, historically designed to emulate the activation characteristics of an organic neuron. A collection of neurons that are connected via a (usually directed) graph structure are known as an \emph{Artificial Neural Network (ANN)}. 
+%\begin{definition}{Artificial Neural Networks (ANNs)} are functions $N:\R^n \to \R^m$ determined by weighted directed graphs whose nodes compose a weighted sum of the input along each incoming edge with the weights for those edges with a nonlinear activation function to generate an output. We can denote an ANN as a function in terms of an input vector $\vec x$ and its parameters $\vec w$: $N(\vec x, \vec w)$.  
+%\end{definition}
+
+The fundamental building blocks of most ANNs are artificial neurons which we will refer to as \emph{perceptrons}.
+
+\begin{definition}{A \textbf{Perceptron} is  }
+\label{perceptron}
+a function $P_{\vec w}: \R^n \to \R$ which has \emph{weights} $\vec
+w \in \R^n$ corresponding with each element of an input vector $\vec
+x\in \R^n$ and a bias $b \in \R$:
+\[P_{\vec w}(\vec x) = f(\left(\ip{\vec w,\vec x} + b\right)\]
+\[P_{\vec w}(\vec x) = f\left(b + \sum_{i = 1}^n w_i x_i\right)\]
+where $f: \R \to \R$ is continuous. The function $f$ is called the \textbf{activation function} for $P$. 
+\end{definition}
+
+
+The only nonlinearity in $P_w$ is contained in $f$. If $f$ is chosen to be linear, then $P$ will be a linear operator. Although this has the advantage of simplicity, linear operators do not perform well on nonlinear problems like classification. For this reason, activation functions are generally chosen to be nonlinear. Historically, heaviside functions were used for activation, later replaced with sigmoids \cite{malik1990preattentive} for their smoothness, switching structure, and convenient
+compactification of the output from each perceptron.  It was recently discovered that a simpler nonlinear function, the \emph{Rectified Linear Unit (ReLU)} works as well or better in most neural-network-type applications \cite{glorot2011deep} and additionally training algorithms on ReLU activated networks converge faster \cite{nair_rectified_nodate}. 
+
+\begin{definition}{The Rectified Linear Unit (ReLU) function is}
+\label{relu}
+
+  \[\relu(x) = \begin{cases} 0, & x \leq 0;\\
+      x, & x > 0,\end{cases}\]
+\end{definition}
+
+
+The single nonlinearity of this activation function
+at $x = 0$ is sufficient to guarantee existence of $\epsilon$ approximation of smooth functions by an ANN composed of sufficiently numerous perceptrons connected by ReLU \cite{petersen2018optimal}. In addition, ReLU is convex, which enables efficient numerical approximation of smooth functions in shallow networks  \cite{li2017convergence}.  
+
+
+% \cite{prakash2018}
+% \cite{Szegedy2013}
+% \cite{goodfellow_explaining_2014}
+% \cite{Bishop:2006:PRM:1162264}
+% \cite{mohammad16}
+% \cite{Khoury2018}
+% \cite{inevitable2018}
+% \cite{tsipras2018robustness}
+
+% step 1 intro (2 slides) motivating picture and overview
+% step 2 liu key point is that you really don't need to know much
+% about the distribution for the depth sampling to approximate it well
+% (2 slides define depth and show key theorem)
+% step 3 natural algorithm (1 slide)
+% step 4 (2 slides) better algorithm (2 slides + board work)
+% step 5 (1 slide) computation time for different algorithms
+% step 6 (1 slide) extension to n-dimensional simplices
+% step 7 (1 slide) wrap up with final clean examples with bands. We
+% want to do with clustering what they did with uncertainty. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%(1)
+
+
+%  \subsection{Definitions}
+% The model is named for its proxy in the human brain and we call the 
+% units of this model \emph{neurons} which function much like biological
+% neurons. We define a neuron (node) in a neural network as an operation
+% on an input vector $x \in \R^n$ with a set of weights $w(i,j,k)$ for
+% each element of the input, a bias $b(i,j)$, and an activation filter
+% $g_i: \R \to \R$ which will generate an output signal from the neuron
+% (in general practice, the activation filter is consistent across the
+% entire network or over groups of neurons, but it can vary for each
+% neuron if desired). The activation filter will contain any
+% non-linearity for the model.  
+% \begin{tcolorbox}{Neuron (Node)}
+% \[N_{i,j}(x) = g_i\left(b_{i,j} + \sum_{k = 1}^n w_{i,j,k} x_k\right)\]
+% \end{tcolorbox}
+
+% Output filters are generally designed to squeeze the raw output from a
+% neuron into a convenient decision space: boolean or  sigmoidal output. \\
+% \begin{tcolorbox}{Output Filter Examples}
+% \[g_i(N_{i,j}(x)) = \begin{cases} 1 , & \text{ if } N_{i,j}(x) > \e\\
+% 0 , & \text{ if } N_{i,j}(x) \leq \e\end{cases}\]
+% or
+% \[g_i(N_{i,j}(x)) = \frac{1}{1 + e^{N_{i,j}(x) - M_{i,j}}}\]
+% (where $M_{i,j}$ is an expectation for $N_{i,j}$)
+% \end{tcolorbox}
+
+
+In general ANNs 
+must not be cyclic and, for convenience, are often arranged into
+independent layers. An early roadblock for neural networks was a proof by Minsky \cite{minsky1969perceptrons} that single layers of perceptrons could not encode exclusive-or. Depth, the number of layers in a neural network, is a key factor in its ability to approximate complicated functions including exclusive-or \cite{kak1993training}. For this reason, modern ANNs are usually composed of many layers (3-100). The most common instance of a neural network model is a fully connected \emph{feed forward (FF)} configuration. In this configuration data enters as an input layer which is fed into each of the nodes in the first layer of neurons. Output of the first layer is fed into each of the nodes in the second layer, and so on until the output of the final layer is fed into an output filter which generates the final result of the neural network. 
+
+
+
+
+In this example of a FF network, an input vector in $\R^7$ is mapped to a
+an output in $\R^3$ which is fed into a classifier. Each blue circle
+represents a perceptron with the ReLU activation function. 
+
+% \begin{figure}[H]
+%   \centering
+%   \caption{BoxPlot Uncertainty}
+%     \includegraphics[width=12cm]{BoxPlot_Uncertainty.png}
+% \end{figure}
+% \centering \footnotesize{Images produced by Mirzargar et al \cite{Raj2017}}
+
+\scalebox{.9}{
+\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
+    \tikzstyle{every pin edge}=[<-,shorten <=1pt]
+    \tikzstyle{neuron}=[circle,fill=black!25,minimum size=9pt,inner sep=0pt]
+    \tikzstyle{input neuron}=[neuron, fill=green!50];
+    \tikzstyle{output neuron}=[neuron, fill=red!50];
+    \tikzstyle{hidden neuron}=[neuron, fill=blue!50];
+    \tikzstyle{annot} = [text width=4em, text centered]
+
+    % Draw the input layer nodes
+    \foreach \name / \y in {1,...,7}
+    % This is the same as writing \foreach \name / \y in {1/1,2/2,3/3,4/4}
+        \node[input neuron] (I-\name) at (0,-\y) {};
+%pin=left:Input \#\y
+    % Draw the hidden layer nodes
+    \foreach \name / \y in {1,...,6}
+        \path[yshift=-0.5cm]
+            node[hidden neuron] (H-\name) at (\layersep,-\y cm) {};
+
+    \foreach \name / \y in {1,...,4}
+        \path[yshift=-1.5cm,xshift=2.0cm]
+            node[hidden neuron] (HH-\name) at (\layersep,-\y cm) {};
+
+    \foreach \name / \y in {1,...,3}
+        \path[yshift=-2cm,xshift=4.0cm]
+            node[output neuron] (O-\name) at (\layersep,-\y cm) {};
+
+    % Draw the output layer node
+%   \foreach \name / \y in {1,...,3}
+%        \path[yshift=-1.5cm,xshift=4.0cm]
+%            \node[output neuron] (O-\name) at (\layersep,-\y cm) {};
+
+
+    % Connect every node in the input layer with every node in the
+    % hidden layer.
+    \foreach \source in {1,...,7}
+        \foreach \dest in {1,...,6}
+            \path (I-\source) edge (H-\dest);
+
+    \foreach \source in {1,...,6}
+        \foreach \dest in {1,...,4}
+            \path (H-\source) edge (HH-\dest);
+
+    % Connect every node in the hidden layer with the output layer
+    \foreach \source in {1,...,4}
+        \foreach \dest in {1,...,3}
+            \path (HH-\source) edge (O-\dest);
+
+    % Annotate the layers
+  \node [rectangle, draw, minimum height=6.2cm, text width=.8cm, text
+  centered, left =.8cm of I-4] (mm) {Data};
+
+    \foreach \source in {1,...,7}
+        \path [line] (mm.east|-I-\source) -- (I-\source);
+
+    \node[annot,above of=H-1, node distance=2cm] (hl) {Layer 1};
+    \node[annot,left of=hl] {Input };
+    \node[annot,right of=hl] (h3) {Layer 2} ;
+    \node[annot,right of=h3] {Output Layer};
+  \node [rectangle, draw, minimum height=5cm, text width=1.6cm, text
+  centered, right =6.8cm of I-4] (mc) {Classifier};
+    \foreach \source in {1,...,3}
+        \path [line] (O-\source) -- (mc.west|-O-\source);
+
+
+\end{tikzpicture}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%(2)
+% 2. define classifier
+
+The output of this ANN is fed into a classifier. To complete this
+example, we can define the most common classifier, Softmax:
+
+
+\begin{definition}{Softmax (or the normalized exponential) is the function given by}
+\[s : \R^n \to [0,1]^n\]
+\[s_j(\vec x) = \frac{e^{x_j}}{\sum_{k = 1}^n e^{x_k}}\]
+\end{definition}
+
+\begin{definition}{We can define a classifier which picks the class corresponding with the largest output element from Softmax: }
+\[\text{(Output Classification)  }   c_s(\vec x) = \text{argmax}_{i} s_i(\vec{x})\]
+\end{definition}
+% It is important that the classifier admit a directed error function
+During training, the output $y \in \R^n$ from a network can thus be compressed using softmax into $[0,1]^n$ as a surrogate for probability for each possible class or directly into the classes which we can represent as the simplex for the vertices of $[0,1]^n$. 
+
+\cite{Bishop:2006:PRM:1162264}
+
+\subsection{Convolutional Neural Networks (CNNs)}\label{cnn}
+
+Another common type of neural network which is a component in many modern applications including one in the experiments to follow are Convolutional Neural Networks (CNNs). CNNs are fundamentally composed of
+perceptrons, but each layer is not fully connected to the
+next. Instead, layers are arranged spatially and overlapping groups of perceptrons are independently connected to the nodes of the next layer, usually with a nonlinear filter that computes the maximum of all of the incoming nodes to a new node. This structure has been shown to be very effective on problems with spatial information \cite{lecun1995convolutional}. 
+
+\section{Training ANNs}
+
+Neural networks consist of a very large number of perceptrons with many parameters. Directly solving the system implied by these parameters and the empirical risk minimization problem defined below would be difficult, so we must use a
+modular approach which takes advantage of the simple and regular structure of ANNs.
+
+ A breakthrough came with the application of techniques derived from control theory to ANNs in the late 1980s \cite{rumelhart1986learning}, dubbed backpropagation. This technique was refined into its modern form in the thesis and continuing work of Yann LeCun \cite{lecun1988theoretical}. In this method, error is propagated backward taking advantage of the directed structure of the network to compute a gradient for each parameter defining it. Because modern ANNs are usually separated into discrete layers, gradients can be computed in parallel for all perceptrons at the same depth of the network
+\cite{Bishop:2006:PRM:1162264}. Leveraging modern GPUs and parallel computing technologies, these gradients can be computed very quickly. There are a number of important considerations in training. We discuss a few in the following sections. 
+
+\subsection{Selection of the Training Set}
+
+The first step in training an ANN is the selection of a training set. ANNs fundamentally are universal function approximators: Given a set of input data and corresponding output data, they approximate a mapping from one to the other. Performance is dependent on how well the phenomenon we hope to model is represented by the training data. The training data must consist of a set of inputs (e.g., images) and a set of outputs (e.g., labels) which contain sufficient examples to characterize the intended model. In a way, this is how we pose a question to the neural network. One must always ask whether the question we wish to pose is well-expressed by the training data we have available. 
+
+The most important attributes of a training dataset are the number of
+samples it contains and its density near where the model will be making predictions. According to conventional wisdom, training a neural network with $K$ parameters
+will be very challenging if there are fewer than $K$ training samples
+available. The modular structure of ANNs can be combined with regularization of the weights to overcome these limitations \cite{liu2015very}. 
+In general, we will denote a training set by $(X,Y)$ where $X$ is an indexed set of inputs and $Y$ is a corresponding indexed set of labels. 
+
+\subsection{Selecting a Loss Function}
+
+Once we have selected a set of training data (both inputs and outputs), we must decide how we will evaluate the match between the ANNs output and the defined outputs from the training dataset -- we will quantify the deviation of the ANN compared with the given correspondence as a Loss. In general \emph{loss functions} are nonzero functions which compare an output $y$ against a ground-truth $\hat y$. Generally they have the property that an ideal outcome would have a loss of 0. 
+
+One commonly used loss function for classification is known as Cross-Entropy Loss:
+\begin{definition}{The Cross-Entropy Loss comparing two possible outputs is}
+$L(y,\hat y) = -\sum_i y_i \log \hat y_i$.
+\end{definition}
+Other commonly used loss functions include $L^1$ loss (also referred to as Mean Absolute Error (MAE)), $L^2$ loss (often referred to as Mean-Squared-Error (MSE)), and Hinge Loss (also known as SVM loss). 
+
+To set up the optimization, the loss for each training example must be aggregated. Generally, ANN training is conducted via Empirical Risk Minimization where Empirical Risk is defined for a given loss function $L$ as follows:
+\begin{definition}{Given a loss function $L$, the Empirical Risk over a training dataset $(X,Y)$ of size $N$ is }
+\[R_{\text{emp}}(P_{\vec w}(x) = \dfrac{1}{N} \sum_{(x,y) \in (X,Y)} L(P_{\vec w}(x)), y).\]
+\end{definition}
+We seek parameters $\vec w$ which will minimize $R_{\text{emp}}(P_{w}(x))$. This will be done with gradient-based optimization. 
+
+\subsection{Computation of Gradient via Backpropagation}
+
+Since it is relevant to the optimization being performed, we will briefly discuss the computation of gradients via backpropagation. For this discussion, we will introduce a small subset of a neural network in detail. In general, terms will be indexed as follows:
+\[ x^{\text{[layer]}}_{\text{[node in layer], [node in previous layer]}}\]
+When the second subscript is omitted, the subscript will only index the node in the current layer to which this element belongs. 
+
+\scalebox{.9}{
+\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
+
+\node[circle, minimum size=19pt, fill=black!25, inner sep=0pt] (n11) at (0,2) {$a^1_1$};
+\node[circle, minimum size=19pt, fill=black!25, inner sep=0pt] (n12) at (0,0) {$a^1_2$};
+\node[circle, minimum size=19pt, fill=black!25, inner sep=0pt] (n21) at (4,2) {$a^2_1$};
+\node[circle, minimum size=19pt, fill=black!25, inner sep=0pt] (n22) at (4,0) {$a^2_2$};
+\node[circle, minimum size=19pt, fill=black!25, inner sep=0pt] (n31) at (8,2) {$a^3_1$};
+\node[circle, minimum size=19pt, fill=black!25, inner sep=0pt] (n32) at (8,0) {$a^3_2$};
+
+\node (av1) at (0,2.9) {$\Bar{a}^1$};
+\node (av2) at (4,2.9) {$\Bar{a}^2$};
+\node (av3) at (8,2.9) {$\Bar{a}^3$};
+
+\node (ai1) at (0,3.9) {Index: $i$};
+\node (ai2) at (4,3.9) {Index: $\alpha$};
+\node (ai3) at (8,3.9) {Index: $\lambda$};
+
+\node (w2) at (2.6,2.9) {$W^2$};
+\node (w3) at (6.6,2.9) {$W^3$};
+
+
+\draw[- triangle 45] (n11)  -- node[rotate=0,shift={(0.3,0.3)}] {$w^2_{1,1}$} (n21);
+\draw[- triangle 45] (n11)  -- node[rotate=0,shift={(0.6,0.65)}] {$w^2_{1,2}$} (n22);
+\draw[- triangle 45] (n12)  -- node[rotate=0,shift={(0.3,-0.65)}] {$w^2_{2,1}$} (n21);
+\draw[- triangle 45] (n12)  -- node[rotate=0,shift={(0.6,-0.3)}] {$w^2_{2,2}$} (n22);
+
+\draw[- triangle 45] (n21)  -- node[rotate=0,shift={(0.3,0.3)}]  {$w^3_{1,1}$} (n31);
+\draw[- triangle 45] (n21)  -- node[rotate=0,shift={(0.6,0.65)}] {$w^3_{1,2}$} (n32);
+\draw[- triangle 45] (n22)  -- node[rotate=0,shift={(0.3,-0.65)}]  {$w^3_{2,1}$} (n31);
+\draw[- triangle 45] (n22)  -- node[rotate=0,shift={(0.6,-0.3)}]  {$w^3_{2,2}$} (n32);
+\end{tikzpicture}
+}
+
+In this diagram, the $W^l$ are matrices composed of the weights indexed as above. Given an activation function for layer $n$ $A^n$ and its element-wise application to a vector $\bar A^n$, we can now write the output $\bar a_n$ for any layer of an arbitrary ANN in two ways \cite{Krause20}. Recursively, we can define
+\begin{equation}
+    a^n_\lambda = A^n(\sum_\alpha w^n_{\alpha, \lambda} a^{n-1}_\alpha)
+\end{equation}
+We can also write the matrix form of this recursion for every node in the layer:
+\begin{equation}
+\bar a^n = \bar A^n (W^n(\bar a^{n-1} ) )
+\end{equation}
+The matrix form makes it easier to write out a closed form for the output of the neural network. 
+\begin{equation}
+\bar a^n = \bar A^n (W^n(\bar A^{n-1}( W^{n-1} ( \cdots ( \bar A^{2} ( W^{2} \bar a^1) ) \cdots ) ) ) )
+\end{equation}
+
+Now, given a loss function $L = \sum_{i} \ell_i(a^n_i)$ where each $\ell_i$ is a loss function on the $i^{\text{th}}$ element of the output, we wish to compute the derivatives $\dfrac{\partial L}{\partial_{w^l_{i,j}}}$ for every $l, i,$ and $j$ which compose the gradient $\nabla L$. Using the diagram above, we can compute this directly for each weight using chain rule:
+\begin{align*}
+    \dfrac{\partial L}{\partial w^3_{\lambda,\alpha}} &= \dfrac{\partial L}{\partial a^3_{\lambda}} \dfrac{\partial a^3_{\lambda}}{\partial w^3_{\lambda,\alpha}} = \sum_{\lambda=1}^n \ell'_\lambda( a^3_\lambda) A'^3 (\sum_{\alpha=1}^n w^3_{\alpha, \lambda} a_\alpha^2) a^2_\alpha\\    
+    %\dfrac{\partial L}{\partial w^2_{\alpha,i} } &= \sum_{\lambda} \dfrac{\partial L}{\partial a^3_{\lambda}} \dfrac{\partial a^3_{\lambda} }{\partial w^3_{\lambda,\alpha}} \dfrac{\partial a^2_\alpha }{ w^2_{\alpha,i}}\\
+\end{align*}
+Many of the terms of this gradient (e.g. the activations $a^n_i$ and the sums $\sum_{i} w^n_{i,j} a_i$) are computed during forward propagation when using the network to generate output. 
+We will store such values during the forward pass and use a backward pass to fill in the rest of the gradient. Furthermore, notice that $\ell'_\lambda$ and $A'^n$ are well understood functions 
+whose derivatives can be computed analytically almost everywhere. We can see that all of the partials will be of the form 
+$\dfrac{\partial L}{\partial w^l_{n, i}} = \delta^l_n a^l_i$ where $\delta^l_n$  will contain terms which are either pre-computed or can be computed analytically. Conveniently, we can define this error signal recursively: 
+\[
+\delta^l_n = A'^l (a^l_{n}) \sum_{i = 1}^n w^{l+1}_{i, n} \delta^{l+1}_i
+\]
+In matrix form, we have
+\[\bar \delta^l = \bar A'^l(W^l \bar a^l) \odot ((W^{l+1})^T \bar \delta^{l+1}\]
+Where $\odot$ signifies element-wise multiplication. 
+
+Then we can compute the gradient with respect to each layer's matrix $W^l$ as an outer product: 
+\[\nabla_{W^l} L = \bar \delta^l \bar a^{(l-1)T}\]
+Since this recursion for layer $n$ only requires information from layer $n+1$, this allows us to propagate the error signals that we compute backwards through the network. 
+
+
+\subsection{Optimization of Weights}
+
+Given a set of training input data and a method for computing gradients, our ultimate goal is to iteratively run our training-data through the network, updating weights gradually according to the gradients computed by backpropagation. In general, we start with some
+default arrangement of the weights and choose a step
+size $\eta$ for gradient descent. Then for each weight, in each iteration
+of the learning algorithm, we apply a correction so that 
+\[w'_{i',j',k'} = w_{i',j',k'}-\eta \frac{\partial E(Y,\hat Y)}{\partial
+    w_{i',j',k'}}\]
+    In this case, the step size (learning rate) $\eta$ is fixed throughout training.
+    Numerical computation of the gradient requires first evaluating the network forward by computing the output for a given input. The value of every node in the network is saved and these values are used to weight the error as it is propagated backward through the network. Once the gradient is computed, the weights are adjusted according to the step defined above. This process is repeated until convergence is attained to within a tolerance. It should be
+clear from the number of terms in this calculation that the initial
+guess and step size can have significant effect on the eventual trained weights.
+Due to lack of a guarantee for general convexity, poor guesses for such a large number of parameters can lead
+to gradients blowing up or down   \cite{Bishop:2006:PRM:1162264}. 
+. Due to nonlinearity and the plenitude of local minima in the loss function, classic gradient descent usually does not perform well during ANN training. \\ 
+By far the most common technique for training the weights of neural networks adds noise in the form of random re-orderings of the training data to the general optimization process and is known as stochastic gradient descent. 
+%\begin{tcolorbox}{}
+\begin{definition}{Stochastic Gradient Descent (SGD)}
+
+Given an ANN $N: \R^n \to C$, an initial set of weights for this network $\vec w_0$ (usually a small random perturbation from 0), a set of training data $X$ with labels $Y$, and a learning rate $\eta$, the algorithm is as follows: 
+
+\begin{algorithm}
+\caption*{Batch Stochastic Gradient Descent}\label{sgd}
+\begin{algorithmic}[H]
+\State $w = w_0$
+\While{$E(\hat Y, P_w(X))$ (cumulative loss) is still improving} \Comment{ (the stopping condition may require that the weight change by less than $\e$ for some number of iterations or could be a fixed number of steps)}
+\State Randomly shuffle $(X,Y)$
+\State Draw a small batch $(\hat X, \hat Y) \subset (X, Y)$
+\State $w \leftarrow w - \eta \left(\sum_{(x,y) \in (\hat X, \hat Y)}  \nabla L(P_w(\hat x), \hat y)\right)$
+\EndWhile
+\end{algorithmic}
+\end{algorithm}
+\end{definition}
+%\end{tcolorbox}
+Stochastic gradient descent achieves a smoothing effect on the gradient optimization by only sampling a subset of the training data for each iteration. Miraculously, this smoothing effect not only often achieves faster convergence, the result also generalizes better than solutions using deterministic gradient methods 
+\cite{HardtRS15}. It is for this reason that SGD has been adopted as the de facto standard among ANN training applications.
+
+\section{Problem Setting: Adversarial Attacks }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%(2)
+
+In general \emph{Adversarial Attacks} against models
+are small perturbations from natural data which significantly perturb
+model output. 
+Szegedy et al. \cite{Szegedy2013} realized that the same computational tools
+used to train ANNs could be used to generate attacks that would
+confuse them. Their approach was to define a loss function
+relating the output of the ANN for a given initial image to a target adversarial 
+output plus the $L^2$-norm of the input and use backpropagation to
+compute gradients -- not on the weights of the neural network, but on
+just the input layer to the network. The solution to this optimization
+problem, efficiently approximated by a gradient-based optimizer, would
+be a slightly perturbed natural input with a highly perturbed
+output. Their experimental results are striking:\\
+
+\begin{figure}[H]
+    \centering
+\includegraphics[width=7.3cm]{szegedy/negative1.png}\includegraphics[width=7.3cm]{szegedy/negative2.png}
+    \caption{Natural Images are in columns 1 and 4, Adversarial images are in columns 3 and 6, and the difference between them (magnified by a factor of 10) is in columns 2 and 5. All images in columns 3 and 6 are classified by AlexNet as "Ostrich" \cite{Szegedy2013}}
+    \label{fig:my_label}
+\end{figure}
+
+\subsection{Data Sets}
+
+The Dataset used above is known as ImageNet -- a large set of labeled images varying in size originally compiled for the ImageNet Large Scale Visual Recognition Challenge (ILSVRC). This dataset and its many subsets has become a standard for image classification and feature identification experiments. In the experiments that follow, ImageNet will be featured alongside the Modified National Institute of Standards and Technology (MNIST) dataset which is a database of hand written digits often used to develop image processing and character recognition systems. This dataset is much lower resolution than ImageNet and is therefore experiments run much more quickly on it and require less complex input/output.  
+
+\subsection{L-BFGS minimizing distortion}\label{lbfgs}
+
+Szegedy et al. took advantage of the tools they had on hand for training neural networks to set up a box-constrained optimization problem whose approximated solution generates these targeted misclassifications. 
+
+
+Let $f : \R^m \to \{1,...,k\}$ be a classifier and assume $f$ has an associated continuous loss function denoted by loss$_f : \R^m \times \{1,...,k\} \to \R^+$ and $l$ a target adversarial . \\
+\textbf{ Minimize} $\Norm{r}_2$ subject to:
+\begin{enumerate}[1.]
+\item $f(x + r) = l$
+\item $x + r \in [0,1]^m$
+\end{enumerate}
+
+The solution is approximated with L-BFGS (see Appendix \ref{appa}) as implemented in Pytorch or Keras. This technique yields examples that are close to their original counterparts in the $L^2$ sense.  \\
+
+%Find the minimum $c > 0$ for which the minimizer $r$ of the following satisfies $f(x+r) = l$\\
+
+%minimize $c|r| + $loss$_f(x+r,l)$ subject to $x + r \in [0,1]^m$.
+
+\subsubsection{L-BFGS: Mnist}
+The following examples are prepared by implementing the above technique via pytorch on images from the Mnist dataset with FC200-200-10, a neural network with 2 hidden layers with 200 nodes each:
+\begin{figure}[H]
+\label{lbfgsa}
+\includegraphics[trim=200 185 100 200, clip, width=7cm]{2019-04-10-adverse/mnist_examples/FC200-200-10-2448-O8-A0-attack_summary.png}\includegraphics[trim=200 185 100 200, clip,width=7cm]{2019-04-10-adverse/mnist_examples/FC200-200-10-2448-O8-A1-attack_summary.png}
+\includegraphics[trim=200 185 100 200, clip,width=7cm]{2019-04-10-adverse/mnist_examples/FC200-200-10-2448-O8-A2-attack_summary.png}\includegraphics[trim=200 185 100 200, clip,width=7cm]{2019-04-10-adverse/mnist_examples/FC200-200-10-2448-O8-A3-attack_summary.png}
+\includegraphics[trim=200 185 100 200, clip,width=7cm]{2019-04-10-adverse/mnist_examples/FC200-200-10-2448-O8-A4-attack_summary.png}\includegraphics[trim=200 185 100 200, clip,width=7cm]{2019-04-10-adverse/mnist_examples/FC200-200-10-2448-O8-A5-attack_summary.png}
+\caption{Original images on the left, Perturbation is in the middle, Adversarial Image (total of Original with Perturbation) is on the right. Column 1 shows an original 8 being perturbed to adversarial classes 0, 2, and 4. Column 2 shows adversarial classes 1, 3, and 5}
+\end{figure}
+Borrowing a metric from Szegedy et al to compare the magnitude of these distortions, we will define
+\begin{definition}{Distortion is the $L^2$ norm of the difference between an original image and a perturbed image, divided by the square root of the number of pixels in the image: }
+\[\sqrt{\dfrac{\sum_i \hat (x_i - x_i)^2}{n}}\]
+\end{definition}
+Distortion is $L^2$ magnitude normalized by the square-root of the number of dimensions so that values can be compared for modeling problems with differing numbers of dimensions. 
+
+The 900 examples generated for the network above had an average distortion of 0.089 with the following distribution of distortions, given in figure 3.
+
+\begin{figure}[H]
+\label{lbfgsh}
+\includegraphics[trim=200 80 100 100, clip, width=16cm]{2019-04-10-adverse/mnist_examples/FC200-200-10-distortion_hist.png}
+\caption{A histogram of the distortion measured for each of 900 adversarial examples generated using L-BFGS against the FC-200-200-10 network on Mnist. Mean distortion is 0.089.}
+\end{figure}
+
+\subsubsection{L-BFGS: ImageNet}
+\label{lbfgs-s}
+We also tried to replicate \cite{Szegedy2013}'s results on ImageNet. Attacking VGG16, a well known model from the ILSVRC-2014 competition \cite{simonyan2014very}, on ImageNet images with the same technique generates the examples in figure 4: 
+
+\begin{figure}[H]
+\label{lbfgsis}
+\includegraphics[trim=200 185 100 200, clip, width=8cm]{2019-04-10-adverse/imnet_examples/vgg16-ILSVRC2012_val_00039098-O722-A965-attack_summary.png}\includegraphics[trim=200 185 100 200, clip, width=8cm]{2019-04-10-adverse/imnet_examples/vgg16-ILSVRC2012_val_00027142-O52-A347-attack_summary.png}
+\includegraphics[trim=200 185 100 200, clip, width=8cm]{2019-04-10-adverse/imnet_examples/vgg16-ILSVRC2012_val_00029901-O425-A468-attack_summary.png}\includegraphics[trim=200 185 100 200, clip, width=8cm]{2019-04-10-adverse/imnet_examples/ILSVRC2012_val_00001375-Otensor([42])-A694-attack_summary.png}
+% \includegraphics[width=7cm]{2019-04-10-adverse/imnet_examples/vgg16-ILSVRC2012_val_00035978-O803-A353-attack_summary.png}
+% \includegraphics[width=7cm]{2019-04-10-adverse/imnet_examples/ILSVRC2012_val_00000886-Otensor([940])-A684-attack_summary.png}
+\caption{Original images on the left, Perturbation (magnified by a factor of 100) by is in the middle, Adversarial Image (total of Original with Perturbation) is on the right. }
+\end{figure}
+
+%The average distortion was 0.01 distributed as seen in figure \ref{lbfgsi}. 
+
+\begin{figure}[H]
+\label{lbfgsi}
+\includegraphics[trim=200 80 100 100, clip,width=14cm]{2019-04-10-adverse/imnet_examples/distortion_hist.png}
+\caption{A histogram of the distortion measured for each of 112 adversarial examples generated using L-BFGS against the VGG16 network on ImageNet images with mean distortion 0.0107}
+\end{figure}
+
+\subsubsection{Fast Gradient Sign Method (FGSM)} 
+
+  We also implemented a single step attack process uses the gradient of the loss function $L$ with respect to the image to find the adversarial perturbation \cite{goodfellow_explaining_2014}. for given $\e$, the modified image $\hat x$ is computed as
+\begin{equation}
+\hat{x} = x + \epsilon \text{sign} (\nabla L (P_w(x),x))
+\end{equation}
+
+This method is simpler and much faster to compute than the L-BFGS technique described above, but produces adversarial examples less reliably and with generally larger distortion. Performance was similar but inferior to the Iterative Gradient Sign Method summarized below.  
+%\[\hat x = x + \e \sign(\Delta \ell(F(x'_m),x'_m))\]
+
+\subsubsection{Iterative Gradient Sign Method (IGSM)}
+\label{igsm-s}
+In \cite{kurakin_adversarial_2016}
+  an iterative application of FGSM was proposed. After each
+  iteration, the image is clipped to a $\e L_\infty$ neighborhood of the original. Let $x'_0 = x$, then after $m$ iterations, the adversarial image obtained is:
+\begin{equation}
+x_{m+1}' = \text{Clip}_{x,\epsilon} \Bigl\{x_m' + \alpha \times \text{sign}(\nabla \ell (F(x'_m),x'_m))  \Bigr\} 
+\label{igsm}
+\end{equation}
+This method is faster than L-BFGS and more reliable than FGSM but still produces examples with greater distortion than L-BFGS. 
+%  \[x'_{m + 1} = \text{Clip}_{x,\e} \{ x'_m + \alpha \times
+%  \sign(\Delta \ell(F(x'_m),x'_m))\] 
+\begin{figure}[H]
+  \centering
+\includegraphics[trim=200 110 1200 102, clip,width=4cm]{2019-04-10-adverse/ILSVRC2012_val_00002900summary_plot.png}\includegraphics[trim=900 110 500 102, clip,width=4cm]{2019-04-10-adverse/ILSVRC2012_val_00002900summary_plot.png}
+%\includegraphics[width=12cm]{2019-04-10-adverse/ILSVRC2012_val_00048234summary_plot.png}
+\caption{adversarial example generated against VGG16 (ImageNet) with IGSM. Original Image on the left, adversarial image and added noise (ratio of variance adversarial noise/original image: 0.0000999) on the right. }
+\label{fgsmhip}
+\end{figure}
+
+%The attacks contained in figure ~\ref{fgsmhip} were generated with IGSM against VGG16
+
+
+\subsection{Other Attacks}
+The following attack techniques are also prevalent in the literature but have not been replicated in these experiments. 
+
+\subsubsection{Jacobian-based Saliency Map Attack (JSMA)} Another attack noted by  \cite{papernot_limitations_2015}
+  estimates the \emph{saliency map}, a rating for each of the input features (e.g. each pixel) on how influential it is for causing the model to predict a particular class with respect to the model output \cite{wiyatno2018saliency}. This attack modifies the pixels that are most salient. This is a targeted attack, and saliency is designed to find the pixel which increases the classifier's output for the target class while tending to decrease the output for other classes.
+
+\subsubsection{Deep Fool (DFool)} A technique proposed by \cite{moosavi-dezfooli_deepfool:_2015}
+  to generate an un-targeted iterative attack. 
+This method approximates the classifier as a linear decision boundary and then finds the smallest perturbation needed to cross that boundary.
+This attack minimizes $L_2$ norm with respect to  to the original image.
+
+\subsubsection{Carlini \& Wagner (C\&W)} In \cite{carlini_towards_2016}
+  an adversarial attack is proposed which updates the loss function such that it jointly minimizes $L_p$ and a custom differentiable loss function based on un-normalized outputs of the classifier (\textit{logits}). 
+Let $Z_k$ denote the logits of a model for a given class $k$, and $\kappa$ a margin parameter. Then C\&W tries to minimize:
+\begin{equation}
+|| x - \hat{x} ||_p + c* max\left(Z_k(\hat{x}_y) - max\{Z_k(\hat{x}) : k \neq y\},-\kappa\right)
+\end{equation}
+
+
+
+
+
+%\includegraphics[width=12cm]{2019-04-10-adverse/ILSVRC2012_val_00005366summary_plot.png}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%(3)
+
+\section{Exploring Stability under classifications}
+In this section we define and experimentally demonstrate a notion of stability of classification under a given classification model. 
+
+\subsection{Definitions}
+To build up to a definition for stability, we develop definitions and terms to refer to adversarial examples without relying on subjective characteristics like human vision.Let $X$ denote a space of possible data and $C$ denote a set of classes,
+
+\begin{definition}
+Consider a point $x \in X$ with corresponding class $c \in C$ and a classifier $\CC: X \to C$. We say that $x$ admits an \emph{$(\e,d)-$adversarial example} on $\CC$ if there exists a point $\hat x$ such that $d(x,\hat x) < \e$ and $\CC(\hat x) \neq c$. 
+\end{definition}
+This definition refers to the most general case of intentional mis-classification. The adversarial class can also be explicitly targeted:
+\begin{definition}
+Consider a point $x \in X$ with corresponding class $c \in C$ and a classifier $\CC: X \to C$. We say that $x$ admits an \emph{$(\e,d,c_t)-$targeted adversarial example} on $\CC$ if there exists a point $\hat x$ such that $d(x,\hat x) < \e$ and $\CC(\hat x) = c_t$. 
+\end{definition}
+
+These definitions rely on a metric $d$ which is commonly $L^2$, but can be other metrics.
+The following definition complements the definition for adversarial examples by providing a criteria for the local stability of adversarial examples: 
+\begin{definition}
+$x$ is \emph{$(\gamma,\sigma)$-stable} if $\mathbb{P}[\CC(x')=\CC(x)] \geq \gamma$ when $x' \sim \rho = N(X, \sigma^2 I)$ (i.e. $x'$ is drawn from a Gaussian with variance $\sigma$ and mean $x$).
+\end{definition}
+We see that  
+\[\mathbb{P}[\CC(x')=\CC(x)] = \int \chi_{\CC^{-1}(\CC(x))} (x') d\rho (x') = \rho(\CC^{-1}\CC(x))\]
+In the case of images drawn from $\R^n$, we can write this integral precisely
+\[\dfrac{1}{\sigma(2\pi)^{n/2}} \int_{\R^n} \chi_{\CC^{-1}(\CC(x))} (y)e^{\dfrac{\norm{x - y}^2}{2\sigma^2}} d\vec y\]
+This integral is approximated by taking $N$ samples $x_k \sim \rho$ and computing 
+\[\dfrac{\norm{x_k : \CC(x_k) = \CC(x)}}{N}\]
+In our experiments, $\gamma$ is fixed and $\sigma$ is adjusted to determine the $\sigma$ for which an image is $\gamma-\sigma$ stable. This is accomplished by a bracketing procedure, first expanding the search space bounds $\sigma_{\min}$ and $\sigma_{\max}$ so that the average number of samples at these bounds are below (respectively above) $\gamma$. This search space is then sequentially bisected to identify a $\sigma$ corresponding with $\gamma$. The algorithm is presented in Appendix \ref{bracketing}
+
+%\renewcommand{\baselinestretch}{1.0}
+
+%\renewcommand{\baselinestretch}{1.5}
+
+\subsection{Stability Experiments}
+In the following experiments, adversarial examples are generated using IGSM (\ref{igsm-s}) and L-BFGS methods (\ref{lbfgs-s}). The neighborhoods around them are sampled using Gaussians with varying $\sigma$. Separately the bracketing algorithm described above is used to identify $\sigma$s corresponding with $\gamma=0.7$. The resultant $\sigma$ statistic identifies examples as being $(\gamma=0.7,\sigma)$ stable meaning that 70\% of the samples drawn from a Gaussian with standard deviation $\sigma$ are classified the same as the original class by the model. 
+
+% \subsubsection{Gamma-Sigma Stability of FGSM attacks on MNIST}
+
+% In these initial experiments, the neighborhood around normal and adversarial examples are analyzed via sampling. An image $x$ with classification $is selected, adversarial noise $x_a$ is prepared 
+
+% \begin{figure}[H]
+%   \centering
+% \includegraphics[width=11cm]{2019-04-10-adverse/O6A9_varx40.png}
+% \includegraphics[width=11cm]{2019-04-10-adverse/O6A9_varx40_examp.png}
+%   \caption{Top image shows how a regular image, an adversarial image,
+%     and plain noise get classified with added noise indicated on the
+%     $x$-axis. Second image shows in order the Original, IID Gaussian
+%     noise added,  adversarial noise added, and IID Gausian plus
+%     adversarial noise added. }
+% \end{figure}
+
+% This sampling approach was Each
+% adversarial image in this dataset was bracketted using the sampling
+% technique described above. Within Class 0 of ImageNet (tench/tinca (A
+% type of fish)), 487 samples were processed and of these, 482 met a 5\%
+% threshold, i.e. were less than 95\% of the bracketed additive noise
+% sample distances. This indicates that in exchange for 5\%
+% classification accuracy, we were able to correctly filter out 99.17\%
+% of the adversarial examples. \\
+\subsubsection{FGSM Neighborhood sampling}
+In these initial experiments, the neighborhood around normal and adversarial examples are explored via sampling. An Mnist image $x$ with classification 1 is selected, adversarial noise $x_a$ is prepared using IGSM \ref{igsm} for each target other than 1. The neighborhoods around each such image are examined by generating 1000 Gaussian samples at 1000 equally spaced $\sigma$s. 
+
+\begin{figure}[H]
+\label{fgsmo}
+\includegraphics[trim=200 80 100 100, clip,width=15cm]{2019-04-10-adverse/Image918-O1Anone_varx40.png}
+\caption{Plotting frequency of each class in samples with increasing variance around natural image. Original Image Class is shown as a black curve. Bottom shows example sample images. }
+\end{figure}
+\begin{figure}[H]
+\label{fgsma}
+\includegraphics[trim=200 80 100 100, clip,width=15cm]{2019-04-10-adverse/Image918-O1A0_varx40.png}
+\caption{Plotting frequency of each class in samples with increasing variance around adversarial image. Adversarial class is shown as a red curve. Bottom shows example sample images. }
+\end{figure}
+\begin{figure}[H]
+\label{fgsme}
+%\includegraphics[width=7cm]{2019-04-10-adverse/Image918-O1A1_varx40.png}
+\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/Image918-O1A2_varx40.png}\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/Image918-O1A3_varx40.png}
+\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/Image918-O1A4_varx40.png}\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/Image918-O1A5_varx40.png}
+\caption{Plotting frequency of each class in samples with increasing variance around adversarial images. Original Class is shown as a black curve, adversarial in red, all others are blue. 
+Bottom shows example sample images. }
+\end{figure}
+\begin{figure}[H]
+\label{fgsme}
+\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/Image918-O1A6_varx40.png}\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/Image918-O1A7_varx40.png}
+\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/Image918-O1A8_varx40.png}\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/Image918-O1A9_varx40.png}
+\caption{Plotting frequency of each class in samples with increasing variance around adversarial images. Original Class is shown as a black curve, adversarial in red, all others are blue. Bottom shows example sample images. }
+\end{figure}
+
+Attack examples are generated using IGSM (\ref{igsm}) from each of 200 Mnist images to each possible target other than the original class (9 total targets) for a total of 1800 adversarial examples. 1800 natural images are selected with the same classes as the 1800 adversarial examples. The images are processed using the bracketing algorithm to identify $\sigma$s corresponding with $\gamma = 0.7$ and the resulting sigmas are aggregated into the following histogram:
+\begin{figure}[H]
+\includegraphics[trim=200 80 100 100, clip,width=12cm]{2019-04-10-adverse/original_hist.png}
+\caption{Histogram of $\sigma$ for $(\gamma=0.7, \sigma)$ stability of Adversarial Examples (Red) and Natural Examples (Blue)}
+\label{fgsmh}
+\end{figure}
+
+% TODO : expand figure 13 with a wide sample of adversarial versus natural examples from imagenet. 
+
+In this experiment, the adversarial images (red in the histogram above) were much less stable than the natural images. In this way, 98\% of the adversarial images could be identified by their $\gamma-\sigma$ stability characteristics. 
+
+
+\subsubsection{Sampling Analysis of ImageNet and FGSM)}
+Similar to the above analysis for Mnist, an image $x$ is selected with original class "Rose-Hip", an adversarial perturbation $x_a$ is prepared so that the sum $x + x_a$ has class "Baseball", and 50 Gaussian samples are generated for each of 1000 evenly spaced $\sigma$ values. These samples are added to the above images and the classifications are colored via a heatmap:
+
+\begin{figure}[H]
+\includegraphics[width=14cm]{2019-04-10-adverse/50r1000x_cmap_rand.png}
+\caption{Top heatmap indicates Gaussian samples added to a pure black image,\\
+Middle heatmap indicates Gaussian samples added to $x$ (the original image),\\
+Bottom heatmap indicates Gaussian samples added to $x + x_a$ (the adversarial image).}
+\label{imnetheat}
+\end{figure}
+
+50 such examples are generated and bracketing is used to determine the $\sigma$ for $(\gamma=0.7,\sigma)$ stability in the following histogram. The adversarial example is denoted with a red dot. 
+\begin{figure}[H]
+\includegraphics[trim=200 80 100 100, clip,width=12cm]{2019-04-10-adverse/429-hist.png}
+\caption{Histogram of $\sigma$ for $(\gamma=0.7, \sigma)$ stability of ImageNet examples with class "Baseball." Red dot on the left indicates the same $\sigma$ measurement for an adversarial perturbation of a "Rose-Hip" with new class "Baseball" \ref{fgsmhip}} 
+\label{imnetfgsmsamp}
+\end{figure}
+
+Much like the above case for Mnist, IGSM examples generated on ImageNet were much less $\gamma-\sigma$ stable than natural images, again about 98\% of adversarial images could be distinguished by their $\gamma-\sigma$ stability. It should be noted that due to computational intensity of processing ImageNet samples, this dataset is significantly smaller than that used for the Mnist experiments. 
+
+\subsection{L-BFGS Neighborhood Sampling}
+
+In the following experiments, we will use the slower but more reliable L-BFGS technique from \cite{Szegedy2013} to prepare adversarial examples and will recreate results from the paper relating distortion with network robustness. The same networks and examples will then be subjected to $\gamma-\sigma$ stability analysis for $\gamma = 0.7$ to determine any correspondence of stability with network accuracy and average distortion. 
+
+\subsubsection{Re-examining Szegedy Results with sampling}
+
+The following is a recreation of Table 1 from \cite{Szegedy2013} in which networks of differing complexity are trained and attacked using L-BFGS. In addition to recreating the results from Szegedy et al. the table contains columns for $(\gamma=0.7, \sigma)$ stability of natural and adversarial examples for each network. The networks listed are FC10-4, a fully connected network with no hidden layers that that takes the input vector $x \in \R^{784}$ to an output vector of $y \in \R^{10}$ with the $\lambda*\Norm{\vec w}_2/N$ where $\lambda = 10^{-4}$ and $N$ is the number of parameters in $\vec w$) added as regularization to the objective function during training. FC10-2 is the same except with $\lambda = 10^{-2}$ and FC10-0 has $\lambda=1$ (a very large coefficient for regularization). FC100-100-10 and FC200-200-10 are networks with 2 hidden layers with regularization added for each layer of perceptrons with the $\lambda$ for each layer equal to $10^{-5}, 10^{-5}$, and  $10^{-6}$. Training for these networks is conducted with a fixed number of epochs. 
+
+\begin{table}[H]
+
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+Network & Test Acc & Avg Distortion & Adversarial $(\gamma=0.7, \sigma)$ & Natural $(\gamma=0.7, \sigma)$ \\\hline
+FC10-4 & 92.09 & 0.123 & 1.68 & 0.93\\
+FC10-2 & 90.77 & 0.178 & 4.25 & 1.37\\
+FC10-0 & 86.89 & 0.278 & 12.22 & 1.92\\
+FC100-100-10 & 97.31 & 0.086 & 0.56 & 0.65\\
+FC200-200-10 & 97.61 & 0.087 & 0.56 & 0.73\\\hline
+\end{tabular}
+\caption{Recreation of Table 1 from Szegedy et al. using pytorch. New columns show $\sigma$ values which achieved $(\gamma=0.7,\sigma)$ stability for Adversarial and Natural examples. }
+\label{table1}
+\end{table}
+
+\begin{figure}[H]
+\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/gamma_sigma/FC10-4-distortion_hist.png}\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/gamma_sigma/FC10-4-gamma1_hist.png}
+\caption{Distortion and $\sigma$ histograms for FC-10-4 in Table \ref{table1}}
+\label{table1hist1}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/gamma_sigma/FC10-2-distortion_hist.png}\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/gamma_sigma/FC10-2-gamma1_hist.png}
+\caption{Distortion and $\sigma$ histograms for FC10-2 in Table \ref{table1}}
+\label{table1hist2}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/gamma_sigma/FC10-0-distortion_hist.png}\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/gamma_sigma/FC10-0-gamma1_hist.png}
+\caption{Distortion and $\sigma$ histograms for FC10-0 in \ref{table1}}
+\label{table1hist3}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/gamma_sigma/FC100-100-10-distortion_hist.png}\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/gamma_sigma/FC100-100-10-gamma1_hist.png}
+\caption{Distortion and $\sigma$ histograms for FC100-100-10 in \ref{table1}}
+\label{table1hist4}
+\end{figure}
+\begin{figure}[H]
+\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/gamma_sigma/FC200-200-10-distortion_hist.png}\includegraphics[trim=200 80 100 100, clip,width=7cm]{2019-04-10-adverse/gamma_sigma/FC200-200-10-gamma1_hist.png}
+\caption{Distortion and $\sigma$ histograms for FC200-200-10 in \ref{table1}}
+\label{table1hist5}
+\end{figure}
+
+\subsection{Discussion of Experimental Results}
+In these results, we first notice that adversarial attacks generated with IGSM against Mnist are less stable than natural examples from these data sets. This difference is even more pronounced when comparing a adversarial image with other image samples from its target class. This lower stability of adversarial examples is even more pronounced among the attacks prepared via IGSM against VGG16 on ImageNet. Using this technique, we can distinguish adversarial examples prepared by these techniques from natural examples using stability as a test. 
+
+In the next section of experiments, Table 1 from \cite{Szegedy2013} was reconstructed and augmented with stability measurements. In this table, of the 5 networks trained on the Mnist dataset, the more complicated networks achieved higher accuracy but were defeated by adversarial examples with much less distortion than the simpler adversarial examples. We have added columns indicating the stability of natural and adversarial examples in these models. Adversarial examples generated for more complicated models were much less stable (some less stable than the corresponding natural examples). Adversarial examples generated for the less complicated networks were vastly more stable than natural examples. These results are summarized in the histograms Figure \ref{table1hist1} through \ref{table1hist5}. 
+
+%%%%%%%%%%%%%%%%%%
+
+
+\part{Decision Boundaries}
+\section{decision boundary definitions} 
+%%%%%%%%%%%%%%%%%
+\section{The Argmax Function}
+
+A central issue when writing classifiers is mapping from continuous outputs or probabilities to discrete sets of classes. Frequently argmax type functions are used to accomplish this mapping. To discuss decision boundaries, we must precisely define argmax and some of its properties. 
+
+In practice, argmax is not strictly a function, but rather a mapping from the set of outputs or activations from another model into the power set of a discrete set of classes:
+
+\begin{equation}
+    \text{argmax} : \R^k \to \mathcal{P}(C)
+\end{equation}
+
+Defined this way, we cannot necessarily consider $\argmax$ to be a function in general as the singleton outputs of argmax overlap in an undefined way with other sets from the power set. However, if we restrict our domain carefully, we can identify certain properties. 
+
+Restricting to only the pre-image of the singletons, it should be clear that argmax is continuous. 
+
+Indeed, restricted to the pre-image of any set in the power-set, argmax is continuous. 
+
+Further, we can directly prove that the pre-image of an individual singleton is open. Observe that for any point whose image is a singleton, one element of the domain vector must exceed the others by $\varepsilon > 0$. We shall use the $\ell^1$ metric for distance, and thus if we restrict ourselves to a ball of radius $\varepsilon$, then all elements inside this ball will have that element still larger than the rest and thus map to the same singleton under argmax. Since the union of infinitely many open sets is open in $\R^k$, the union of all singleton pre-images is an open set. Conveniently this also provides proof that the union of all of the non-singleton sets in $\mathcal{P}(C)$ is a closed set. We will call this closed set the argmax Decision Boundary. 
+
+Note : there are ways argmax can be forced to break ties, i.e. by ordering the 
+
+Questions:
+
+Is the decision boundary connected
+
+
+\section{Defining Decision Boundaries}
+
+\subsection{Complement Definition}
+
+A point $x$ is in the \emph{decision interior} $D_f'$ for a classifier $f: \mathbb{R}^N -> \mathcal{C}$ if there exists $\delta > 0$ such that $\forall \epsilon < \delta$, $|f(B_\epsilon(x))| = 1$. 
+
+The \emph{decision boundary} of a classifier $f$ is the closure of the complement of the decision interior $\overline{\{x : x \notin D_f'\}}$. 
+
+\subsection{Constructive Definition}
+
+A point $x$ is on the \emph{decision boundary} $D$ of a classifier $f$ if $\forall \epsilon > 0$, $|f(B_\epsilon(x))| \geq 2$.\\
+
+A point $x$ is a \emph{binary decision point} if $\exists \delta > 0$ such that $\forall \epsilon > 0$ if $\epsilon < \delta$, then $|f(B_\epsilon(x))| = 2$. 
+
+A point $x$ is on the \emph{$K$-decision boundary} $D^K$ of a classifier $f$ if $\exists \delta > 0$ such that $\forall \epsilon > 0$ if $\epsilon < \delta$, then $|f(B_\epsilon(x))| = K$. 
+
+\subsection{Level Set Definition}
+
+The decision boundary $D$ of a probability valued function $F$ is a union of all level sets $L_{c_1, c_2, a}$ defined by two classes $c_1$ and $c_2$ and a constant $a$ which satisfy two properties: First, given $x \in L_{c_1, c_2, a}$, $F(x)_{c_1} = F(x)_{c_2} = a$ where $a$ is a constant also defining the level set. Second, for all $c \notin \{c_1, c_2\}$, we have $a > F(x)_c$.   
+
+\subsection{Images of Decision Boundaries}
+
+We can consider a classification workflow $f$ from a data space $X$ (e.g. $\mathbb{R}^N$) using a model $F$ mapping the data space $X$ to a probability space $Y$ (e.g. $[0,1]^K$ where $K$ is the number of classes) and using argmax to convert continuous representations in $Y$ to discrete classes in the set of classes $\mathbb{C}$. 
+
+\begin{align}
+    X \myrightarrow{F} Y \myrightarrow{\text{argmax}} \mathcal{C}
+\end{align}
+
+In this way we define a usual discrete classifier $f = F \circ \text{argmax}$ 
+
+The decision boundary $D$ is defined on $X$, however we may look at the image of the decision boundary under $F$. For example, if there are only two classes, then $Y = [0,1]^2$ and the decision boundary can be nicely visualized by the black line below: 
+
+\begin{tikzpicture}
+  \draw[->] (-0.5, 0) -- (3.5, 0) node[right] {$x$};
+  \draw[->] (0, -0.5) -- (0, 3.5) node[above] {$y$};
+  \node at (1, 2) (c1) {Class 1};
+  \node at (2, 1) (c2) {Class 2};
+  \draw[-, fill, blue, opacity=.3] (0, 3) -- (3, 3) -- (0, 0);
+  \draw[-, fill, red, opacity=.3] (3, 0) -- (3, 3) -- (0, 0);
+  \draw[scale=1, domain=0:3, smooth, variable=\x, black, line width=0.45mm] plot ({\x}, {\x});
+  %\draw[scale=0.5, domain=-3:3, smooth, variable=\y, red]  plot ({\y*\y}, {\y});
+\end{tikzpicture}
+
+Furthermore, if the output of $F$ are \emph{probabilities} which add to one, then all points of $x$ will map to the orange line:
+
+\begin{tikzpicture}
+  \draw[->] (-0.5, 0) -- (3.5, 0) node[right] {$x$};
+  \draw[->] (0, -0.5) -- (0, 3.5) node[above] {$y$};
+  \node at (1, 2) (c1) {Class 1};
+  \node at (2, 1) (c2) {Class 2};
+  \draw[-, fill, blue, opacity=.3] (0, 3) -- (3, 3) -- (0, 0);
+  \draw[-, fill, red, opacity=.3] (3, 0) -- (3, 3) -- (0, 0);
+  \draw[scale=1, domain=0:3, smooth, variable=\x, black, line width=0.45mm] plot ({\x}, {\x});
+  \draw[-, orange, line width=0.45mm] (0,3) -- (3, 0);
+  %\draw[scale=0.5, domain=-3:3, smooth, variable=\y, red]  plot ({\y*\y}, {\y});
+\end{tikzpicture}
+
+We note that the point $(0.5, 0.5)$ is therefore the only point on the decision boundary for probability valued $F$. We may generalize to higher dimensions where all probability valued models $F$ will map into the the plane $x + y + z + \cdots = 1$ in $Y$ and the decision boundary will be partitioned into $K-1$ components, where the $K$-decision boundary is the intersection of this plane with the \emph{centroid} line $x = y = z = \cdots$ and the $2$-decision boundaries become planes intersecting at the same line. 
+
+\section{exploring boundary curvature with Random Walks}
+
+To analyze decision boundary curvature, we will project samples of points onto the decision boundary and then use Singular Value Decomposition to analyze the \emph{projected points}. In general, this process will involve first selecting two images $x_1$ and $x_2$ for which $C(x_1) \neq C(x_2)$. A point $x_b$ for which $C(x_b)$ is ambiguous between $C(x_1)$ and $C(x_2)$. The resulting sample $X$ will be projected to the decision boundary by either computing a loss function that is minimized when each of the classes $C(X)$ flip from $C(x_1)$ to $C(x_2)$ or vice versa respectively and performing gradient descent, or by interpolating to the parent point of opposite class (so for $x \in X$, if $C(x) = C(x_1)$, we will interpolate from $x$ to $x_2$). 
+
+Once a projection has been found, we will take the singular value decomposition (SVD) of this sample and examine it for degeneracy. 
+
+
+Initial comparison of SVDs of decision boundary points yields a single dominant singular value which corresponds with the content of the original image on the boundary. All random noise appears to be mostly orthogonal to this. 
+
+Once this vector is removed, the remaining signal is simply the adversarial attack information. 
+
+To get a set of singular vectors which to not emphasize the image content, we take random differences among the sampled images and take the SVD of those random differences. 
+
+In these first 10 images, this procedure is carried out on the orthant, where samples are generated with mean 0 and are projected onto orthants with increasing numbers of dimensions. We can see a very clear dropped set of singular values smaller than the rest, which indicate the number of degenerate dimensions. In each of these cases, the dropped singular values match the dimension of the orthant. 
+
+Experiment : A valid experiment here is to measure the difference between the images and the projection to get -- in this case -- normal vectors to the orthant for each image sampled. The SVD of these normals can be computed to determine the number of dimensions in the projecetion operation. This same procedure can be caried out later in the real practical image projections, although in that case orthogonality is not guaranteed. 
+
+\includegraphics[width=8cm]{img/e03-SVD-Orthant_origin-dim-cropped1.png}
+\includegraphics[width=9cm]{img/e03-SVD-Orthant_origin-dim-cropped2.png}
+\includegraphics[width=9cm]{img/e03-SVD-Orthant_origin-dim-cropped3.png}
+\includegraphics[width=9cm]{img/e03-SVD-Orthant_origin-dim-cropped4.png}
+\includegraphics[width=9cm]{img/e03-SVD-Orthant_origin-dim-cropped5.png}
+\includegraphics[width=9cm]{img/e03-SVD-Orthant_origin-dim-cropped6.png}
+\includegraphics[width=9cm]{img/e03-SVD-Orthant_origin-dim-cropped7.png}
+\includegraphics[width=9cm]{img/e03-SVD-Orthant_origin-dim-cropped8.png}
+\includegraphics[width=9cm]{img/e03-SVD-Orthant_origin-dim-cropped9.png}
+\includegraphics[width=9cm]{img/e03-SVD-Orthant_origin-dim-cropped10.png}
+
+There is a question of how best to measure "normal" vectors for each projection. The most direct computation is to take a sample with small variance around each point on the decision boundary and solve least squares of each of these samples. We have previously observed that \emph{most} of the decision boundary is locally planar. 
+
+It remains to compare these computed normals with other known quantities, e.g. the gradient computed with respect to adversarial loss functions and the difference between each sampled image and its resultant projection. In addition, it remains to compare the normals of multiple nearby images to determine at what radius of sample the decision boundary begins to show curvature.\\
+
+The following image shows singular values in order for a sample around a decision boundary image in MNIST generated by interpolating from a test image to an adversarial image generated from it. This plot is dominated by the natural distribution of singular values for a gaussian and also by the original image information which can be seen as a huge singular value on the far left. We will address both of these factors in following plots. \\
+
+\includegraphics[width=14cm]{img/SVD-rand_diff-decision_boundary_uvar-1.0-index-0-image-999.png}
+
+The following plots are generated with a new distribution to replace the gaussian. This "Flat SVD" distribution is generated by first taking a gaussian sample representable by a matrix $X$, then taking the SVD of this gaussian sample $U \Sigma V = X$, replacing $\Sigma$ by $|\Sigma|_2 I$. This distribution has the property that its SVD is flat, while maintaining the Frobenius norm of $X$. This helps to highlight degeneracy in singular values. \\
+
+These first two plots are generated by sampling around a decision boundary image found by interpolating between two test images (rather than a test image and an adversarial example generated from it). We note that the SVD contains two degernate values. These seem to correpond with the two original images of the interpolation. 
+
+\includegraphics[width=14cm]{img/e05-SVD-uniform-rand_diff-decision_boundary_uvar-0.001-index-0-image-999.png}
+
+\includegraphics[width=14cm]{img/e05-SVD-uniform-rand_diff-decision_boundary_uvar-0.001-index-0-image-999-cropped.png}
+
+
+These last two images are generated with the flattened distribution 
+
+\includegraphics[width=14cm]{img/e06-SVD-uniform-rand_diff-decision_boundary_uvar-0.0001-index-0-image-999-cropped.png}
+
+\includegraphics[width=14cm]{img/e06-SVD-uniform-rand_diff-decision_boundary_uvar-0.0001-index-0-image-999.png}
+
+What these experiments tell us is that most of the time when we cross a decision oundary in the MNIST Dataset, we are crossing at a plane, however if we examine a slightly larger ball around a given point, it will intersect the decision boundary at many other places. 
+
+\section{Re-Examining Persistence}
+
+A movivating picture in this research is an image generated while interpolating persistence in the beginning of this research. 
+
+\includegraphics[width=15cm]{img/persistence_interpolation-IMNET-class-11-vgg16-BIM-48-attack_data-001 (2).png}
+
+The next objective is to examine this particular case with our random walk and projection Tools. 
+
+We also wish to augment these tools to include 
+
+%%%%%%%%%%%%%%%%%
+
+\subsection{in probability space}
+\subsection{in image space}
+\section{define orthants}
+\section{skewness}
+
+\section{sampling decision boundaries and analyzing dimensionality
+with PCA}
+\subsection{Orthant and Skewed Orthant}
+
+In order to study decision boundaries, we must talk about two
+properties related to how decision boundaries interact. 
+
+\section{neural network attack gradients versus decision boundaries}
+
+\section{skewed orthant recreates persistence picture (?). }
+\section{measuring skewness of ANNs}
+\section{Relate skewness with dimpled manifold and features not bugs papers}
+
+\part{Model Geometry}
+\section{Neural Networks are Gaussian Processes}
+With Dropout on, the interpolant from one class to another will go into a variety of other classes. If you make a histogram of the locations where these boundary crossings occur, that will show a gaussian. 
+
+insert figure(s)
+
+\section{prove path kernel result in context of differential flow of
+gradients on neural network. using forward euler approx of grad flow. }
+
+\section{** look for sample in weight space and look for gradients}
+  that are pointing toward the final point versus wanting a different
+  direction. Then dot product those with the training direction. 
+
+\section{training gradients are smooth}
+\section{robust network types : regularized, michael's pca, Soft Nearest Neighbor Loss (SNNL) and
+adversarially trained. }
+\section{high dimensional arcs are very similar to chords}
+\section{linear interpolated model parameters from random to trained
+state yield robust models}
+\subsection{For Mnist Inner Products in weight space matter more than
+distances} -- does this generalize to ImNet?
+\section{define robustness in terms of skew versus orthogonal}
+\section{define robustness in terms of attack perturbation magnitude}
+\section{Model Skewness and decision\_boundaries. }
+
+turn observations into are they a definition, a theorem, or a discussion
+
+decision\_boundary crossing
+
+\bibliographystyle{abbrvnat}
+%\bibliography{'../../0-research/bibfile'}
+\bibliography{bibfile}
+
+
+\end{document}
