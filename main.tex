@@ -166,8 +166,6 @@
 % \newcommand{\E}{\mathcal{E}}
 % \newcommand{\fl}{\text{fl}}
 % \newcommand{\sign}{\text{sign}}
-% \newcommand{\norm}[1]{\left\lvert #1 \right\rvert}
-% \newcommand{\Norm}[1]{\left\lVert #1 \right\rVert}
 \usepackage{bbm}
 \newlength{\arrow}
 \settowidth{\arrow}{\scriptsize argmax}
@@ -264,6 +262,8 @@ segmentation style={right color=white,left color=white}
 \def\ltensor#1{\underline{\underline{\underline{#1}}}}
 \DeclareMathOperator\vol{\text{vol}}
 \newcommand{\e}{\varepsilon}
+\newcommand{\vectorproj}[2][]{\textit{proj}_{\vect{#1}}\vect{#2}}
+\newcommand{\vect}{\mathbf}
 
 
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
@@ -303,8 +303,6 @@ segmentation style={right color=white,left color=white}
 % \newcommand{\prob}{\text{Prob}}
 % \newcommand{\Q}{\mathbb{Q}}
 % \newcommand{\C}{\mathbb{C}}
-% \newcommand{\norm}[1]{\lvert #1 \rvert}
-% \newcommand{\Norm}[1]{\lVert #1 \rVert}
 % \newcounter{test}
  \def\layersep{2.0cm}
 
@@ -336,7 +334,85 @@ segmentation style={right color=white,left color=white}
 % \usepackage{tikz}
 % \usetikzlibrary{arrows,positioning,backgrounds,fit}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{calc}
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{subcaption}
+\newcommand{\RR}{I\!\!R} %real numbers
+\newcommand{\Nat}{I\!\!N} %natural numbers
+\usepackage{textcase}
+\usepackage{thmtools,thm-restate}
+\usepackage{subcaption}
 
+\newlength{\depthofsumsign}
+\setlength{\depthofsumsign}{\depthof{$\sum$}}
+\newlength{\totalheightofsumsign}
+\newlength{\heightanddepthofargument}
+
+\newcommand{\nsum}[1][1.4]{% only for \displaystyle
+    \mathop{%
+        \raisebox
+            {-#1\depthofsumsign+1\depthofsumsign}
+            {\scalebox
+                {#1}
+                {$\displaystyle\sum$}%
+            }
+    }
+}
+\newcommand{\resum}[1]{%
+    \def\s{#1}
+    \mathop{
+        \mathpalette\resumaux{#1}
+    }
+}
+
+\newcommand{\resumaux}[2]{% internally
+    \sbox0{$#1#2$}
+    \sbox1{$#1\sum$}
+    \setlength{\heightanddepthofargument}{\wd0+\dp0}
+    \setlength{\totalheightofsumsign}{\wd1+\dp1}
+    \def\quot{\DivideLengths{\heightanddepthofargument}{\totalheightofsumsign}}
+    \nsum[\quot]%
+}
+
+% http://tex.stackexchange.com/a/6424/16595
+\makeatletter
+\newcommand*{\DivideLengths}[2]{%
+  \strip@pt\dimexpr\number\numexpr\number\dimexpr#1\relax*65536/\number\dimexpr#2\relax\relax sp\relax
+}
+\makeatother
+
+
+\usepackage{bbm}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{booktabs}
+\usepackage{pgfplots}
+\usepackage{tikz-3dplot}
+\usepackage{dsfont}
+
+\tdplotsetmaincoords{60}{115}
+\pgfplotsset{compat=newest}
+
+%\newtheorem{theorem}{Theorem}[section]
+
+%\newenvironment{proof}[1][Proof]{\noindent\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
+%\DeclareMathOperator*{\argmax}{arg\,max}
+%\DeclareMathOperator*{\argmin}{arg\,min}
+%\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+%\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\usepackage{todonotes}
+\usepackage{amsmath}
+\usepackage{mathtools}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 \titlepage
@@ -1129,6 +1205,407 @@ Furthermore, if the output of $F$ are \emph{probabilities} which add to one, the
 
 We note that the point $(0.5, 0.5)$ is therefore the only point on the decision boundary for probability valued $F$. We may generalize to higher dimensions where all probability valued models $F$ will map into the the plane $x + y + z + \cdots = 1$ in $Y$ and the decision boundary will be partitioned into $K-1$ components, where the $K$-decision boundary is the intersection of this plane with the \emph{centroid} line $x = y = z = \cdots$ and the $2$-decision boundaries become planes intersecting at the same line. 
 
+\section{Properties of Decision Boundaries}
+
+In practice, decision boundaries have a variety of properties. The
+decision boundary is a pre-image under an onto function that is not
+1-1, which allows decision boundaries to vary in upto as many
+dimensions as the data space. In practice, this will likely be many
+fewer. In particular, decision boundaries should correspond with the
+structure of the data. If the data is embedded within a k-manifold
+within the input space, the decision boundary can be though of on the
+dual space of that manifold.
+
+The dual space of a $k$-manifold embedded in an $n$-dimensional Euclidean space is the space of differential $k$-forms on the manifold. More precisely, for a $k$-manifold $M$ embedded in an $n$-dimensional Euclidean space, the dual space is defined as the space of covariant $k$-tensors on $M$, denoted by $\Lambda^k(M)$, which consists of all linear maps from the tangent space of $M$ at each point to the real numbers.
+
+In particular, when $M$ is a smooth $k$-dimensional manifold, $\Lambda^k(M)$ is the space of smooth $k$-forms on $M$, which can be locally expressed as linear combinations of differential forms of the form $dx_I = dx_{i_1} \wedge dx_{i_2} \wedge \cdots \wedge dx_{i_k}$, where the indices $i_1 < i_2 < \cdots < i_k$ denote the coordinates of a $k$-dimensional chart on $M$ and $dx_i$ denotes the differential of the $i$-th coordinate function.
+
+Intuitively, a $k$-form on $M$ assigns to each $k$-dimensional oriented subspace of the tangent space at a point a signed volume, and the space of all such $k$-forms forms the dual space of $M$. This dual space is important in various areas of mathematics and physics, including differential geometry, topology, and gauge theory.
+
+\subsection{Delaunay Decision Boundaries}
+
+The simplest special case within this dual space is a classifier which
+is defined using the Voronoi diagram for the dataset. We can use the
+voronoi diagram to define a classifier for an arbitrary query point by
+simply assigning it the class of the training point whose voronoi cell
+contains it. This has several useful properties, though one in
+particular stands out.
+
+Given two points $x$ and $y$ in the training set $X$ which define a delaunay
+triangulation and its corresponding voronoi diagram (which is the dual
+of the delaunay triangulation) we can see that a line connecting $x$ to
+$y$ must orthogonally cross the decision boundary -- which is exactly the voronoi
+diagram of this dataset.
+
+Proof:
+\begin{proof}
+Let $x$ and $y$ be two points in a dataset $X$ that share an edge in the Delaunay triangulation for $X$, and let $e$ be the edge they share in the Delaunay graph. Suppose that $e$ is not orthogonal to the face of the Voronoi diagram that $x$ and $y$ share. Then there exists a point $z$ in the interior of the Voronoi cell for $x$ and $y$ such that the line through $z$ and the midpoint of $e$ intersects the face of the Voronoi diagram at a point $p$.
+
+Since $z$ is in the Voronoi cell for $x$ and $y$, it follows that $d(z, x) < d(z, y)$ (where $d$ is the Euclidean distance). But this contradicts the fact that $x$ and $y$ share an edge in the Delaunay triangulation, which implies that the circumcircle of the triangle formed by $x$, $y$, and $z$ does not contain any other points in $X$. In particular, this means that the circumcenter of this triangle lies on the perpendicular bisector of $e$, which implies that $e$ is orthogonal to the face of the Voronoi diagram that $x$ and $y$ share.
+
+Therefore, we have shown that if $x$ and $y$ share an edge in the Delaunay triangulation for $X$, then the edge they share in the Delaunay graph must be orthogonal to the face of the Voronoi diagram that they share.
+\end{proof}
+It is immediately clear that for points not in the training set,
+the line connecting them with eachother or with a point in the
+training set need not cross orthogonal to the voronoi cell
+boundaries. In order to talk clearly about such non-orthogonal
+crossings, we will define
+\begin{definition}
+In arbitrary dimensional space, the \emph{angle of incidence} between a line and a plane is defined as the angle between the line and its projection onto the plane, measured in the plane.
+
+More precisely, let $\mathbb{R}^n$ be an $n$-dimensional Euclidean space, let $\ell$ be a line in $\mathbb{R}^n$ with direction vector $\vec{v}$, and let $P$ be a plane in $\mathbb{R}^n$ with normal vector $\vec{n}$. Suppose that $\ell$ intersects $P$ at a point $Q$. Let $H$ be the orthogonal projection of $\ell$ onto $P$, and let $\theta$ be the angle between $\ell$ and $H$.
+
+Then, the angle of incidence between $\ell$ and $P$ is defined as $\alpha = \frac{\pi}{2} - \theta$, where $\pi$ is the constant representing the ratio of the circumference of a circle to its diameter.
+
+Note that when $n=3$, this definition reduces to the familiar definition of the angle of incidence between a line and a plane in three-dimensional space. However, the definition is valid for arbitrary dimensional space.
+\end{definition}
+
+and
+\begin{definition}
+The 
+\end{definition}
+
+\subsection{Level Set Definition}
+\begin{definition}
+The \emph{decision boundary} $D$ of a probability valued function $F$
+is a union of all level sets $L_{c_1, c_2, a}$ defined by two classes
+$c_1$ and $c_2$ and a constant $a$ which satisfy two properties:
+First, given $x \in L_{c_1, c_2, a}$, $F(x)_{c_1} = F(x)_{c_2} = a$
+where $a$ is a constant also defining the level set. Second, for all
+$c \notin \{c_1, c_2\}$, we have $a > F(x)_c$. This is the
+\emph{decision level set} for level $a$. For a given point $x$ on the
+decision boundary of a function, the \emph{decision level} is the
+value $a$ defining the level set of the decision boundary of which $x$
+is a member.
+
+\textbf{Note: } Any point $x$ can be in at most one level set of the
+decision boundary. 
+
+\end{definition}
+
+\begin{definition}
+  The \emph{dimension} of the decision boundary at a point $x$ is the
+  number of dimensions needed to span $\{z : (x + z)$ is in the decision
+    level $a$ of the level set containing $x\}$
+\end{definition}
+
+A primary property of interest in adversariall attacks is
+``sharpness'' i.e. the property that a partition of a set which is
+attributed to one class might stab needle-like into a partition of
+another set. We will investigate this ``sharpness'' concept by
+examining both the incident angle (the acuteness of angles in the
+decision boundary) and the dimension of the decision boundary, since
+both properties behave like one another. 
+
+There is one conditional bound which is specifically for
+voronoi cells which are not exterior to the voronoi diagram. Such
+cells are bounded. The line connecting a point within a bounded cell
+to the point defining any adjacent voronoi cell.
+
+\subsection{Weighted Delaunay Decision Boundaries}
+This simple voronoi classifier has the limitation that it only cares
+about which individual training datapoint is closest to the query
+point, but is not sensitive to the distribution of this data. If we
+suppose that this data is distributed on a manifold with significant
+co-dimension with respect to the ambient data space, then it would be
+best to use a metric based on this manifold, so that distance among
+the data, and hence the delaunay triangulation and the comensurate
+voronoi cells would be determined by this metric and thus properly
+sensitive to the underlying geometry of this distribution. Alas, this
+is akin to having the generating function for nature. It cannot be
+computed. So instead, we can take advantage of the Delaunay
+triangulation with the usual euclidean metric as an approximation of
+the lower dimensional manifold in this case.
+
+This method is limited by the quality of the training dataset as a
+sampling of the distribution in question. The Delaunay triangulation
+is very sensitive to outliers from a distribution, meaning that our
+samples must have relatively little noise in order to be treated as
+appropriate samples from the low-dimensional manifold. Second,
+Delaunay triangulations are unstable in high-dimensions where very
+small triangles are more likely. Both of these problems are lessened
+by using data which are sufficiently plentiful relative to the
+dimension of the lower dimensional manifold and by requiring that they
+do not have more than a small amount of noise to perturb them from the
+low dimensional manifold. 
+
+Suppose the lower dimensional manifold $M$ could be defined, and the
+training dataset $X$ could be projected onto $M$. The decision
+boundary partitioning $M$ would be a set of slices orthogonal to $M$
+which would partition any training dataset $X$ into its appropriate
+parts. In particular, for a sufficiently dense sampling $x$, we could
+define this decision boundary by examining the data points immediately
+on either side the decision boundary wherever they meet. We can define
+an approximation of the decision boundary as the orthogonal partition
+that we expect to be equidistant between adjacent points of different
+classes for all samplings of training points. % todo refine this language
+In fact, we can define this boundary in the limit using delaunay
+triangulation:
+\begin{definition}
+  Let $M$ be a low dimensional manifold and let $X_{\varepsilon}$ be a
+  sampling of points on $M$ for which the maximal edge length along
+  its Delaunay triangulation $D_{\varepsilon}$ is
+  $\varepsilon$. Given a query point $z$, the $\varepsilon-$Delaunay
+  weight for class $i$, $w(z)_i$, is the sum of the barycentric coordinates of $z$
+  relative to the vertices with label $i$ of the simplex of $D_{\varepsilon}$ which
+  contains $z$. The weight vector $\varepsilon$ boundary level set for
+  factor $a$, $B_{\varepsilon,a}$ is the level set $\{z \in M :$ for
+  all $i$, we have $w(z)_i \leq a$ and for some $i,j$, $w(z)_i =
+  w(z)_j = a\}$. The union of all such level sets over $a$ is the
+  \emph{$\varepsilon-$Delaunay-Boundary} $B_{\varepsilon}$. 
+  \end{definition}
+
+  Remark, we can extend the decision boundary outside of $M$ by simply
+  extending the Delaunay-Boundary using the usual euclidean metric. 
+
+  \begin{theorem}
+    Given a low dimensional manifold $M$, 
+    \begin{align}
+      \lim_{\varepsilon \to 0} B_{\varepsilon}(M) = B(M)
+    \end{align}
+    $B(M)$ is the decision boundary restricted to $M$. 
+  \end{theorem}
+  
+In this way, a particular training set $X$ defines an approximation of
+the general Delaunay Decision Boundary which is well defined outside
+of $M$. If the decision boundary is smooth, then for a sufficiently
+dense training set $X$ which is sufficiently close to $M$, this
+approximation can be bounded by $\varepsilon$ and a lipshitz constant
+coming from the mean value theorem on the decision boundary.
+
+It is this approximate form of the decision boundary which we may in
+practice evaluate. 
+
+\subsection{Orthant and Wedge}
+
+In order to study decision boundaries, we must talk about properties
+related to how decision boundaries interact. We desire a test-object
+whose dimensionality and acuteness of angle we can control. To this
+end we will use the $k-$dimensional orthant:
+
+\begin{definition}
+  Given an integer $k$, the \emph{$k$-orthant} in $n$ dimensions is the set $\{x \in \mathbb{R}^{n}$
+  such that for every natural number $i \leq k$, $x_i > 0\}$
+  \end{definition}
+
+This concept for an orthant can be extended to be acute in arbitrarily
+many angles by tipping toward $x$ to form a wedge.
+
+\begin{definition}
+  Given integer $k$ and a set of $k-1$ angles $\Theta$, the \emph{$k-\Theta-$wedge} in $n$ dimensions is the set $\{x \in \mathbb{R}^{n}$
+  such that $x_1 > 0$ and for every natural number $1 < i \leq k$,
+  $x_i > x_1 \tan(\theta_{i-1})\}$. 
+  \end{definition}
+
+These objects allow us to control the dimensionality and acuteness of
+a decision boundary to test decision boundary metrics. Another recipe
+for analysis is standardizing the paths along which we will cross
+decision boundaries. We will use two general paths relative to the
+wedge for comparison: centerline and $x-$parallel:
+
+\begin{definition}
+  The \emph{centerline} $k-\Theta-$wedge crossing is defined along
+  the line $x_1 = t$, for $1 < i \leq k$ $x_i = t
+  \tan(\theta_{i-1}/2)$, and for $i > k$ $x_i = 0$.\\
+
+  The \emph{$x-\varepsilon-$parallel} $k-\Theta-$wedge crossing is defined along
+  the line $x_1 = t$, for $i > 1$ $x_i = \varepsilon$
+\end{definition}
+
+Although we can easily determine whether a point is inside or outside
+the wedge simply by checking whether it satisfies the conditions
+defining the wedge, we also wish to compute the projection or nearest
+point on the wedge for an arbitrary query point. This involves solving
+for the closest point to a convex object, which can be accomplished by
+projection onto convex sets. 
+
+Computing this projection requires we determine which inequalities
+have been violated. Each inequality corresponds with a hyper-plane.
+\begin{definition}
+  Given a finite set of half-planes $Y_i$ in $\mathbb{R}^n$ and a point $x$,
+  let $I$ contain all $i$ such that $x \notin Y_i$. Then since the
+  intersection of any number of convex sets is convex, $Y_x = \cap_{i \in
+    I} Y_i$ is a convex set. Furthermore, there is exactly one point
+  $z$ with $|x - z| \leq |x - y|$ for every $y$ in $Y_x$. This is the
+  \emph{projection} of $x$ onto $Y_x$.
+\end{definition}
+
+In order to compute this point in practice, we must first determine
+all half-planes that do not contain $x$ and then perform orthogonal
+projection in sequence along these half-planes using Projection onto
+Convex Sets ~/cite{vonneuman-pocs}.
+
+\begin{lemma}
+  If all half-planes $Y_i$ with corresponding normal vector $v_i$ have
+  boundaries $B(Y_i)$ which are mutually orthogonal, i.e. if $\langle
+  v_i, v_j\rangle = 0$ for every combination of $i$ and $j$, then
+  the nearest point can be solved by iterative projection 
+  \begin{align}
+    \vectorproj[v_{i_1}]{(\vectorproj[v_{i_2}]{(\vectorproj[v_{i_3}]{...(x)})})}
+  \end{align}
+\end{lemma}
+(~\cite{vonneuman-pocs})
+
+In the case of the upper wedge, the boundaries are not mutually orthogonal, so
+simple orthogonal projection is not sufficient. We must explore this
+projection in more detail. Really, what we wish to do is project the
+query point $x$ onto the intersection of all of its violated
+boundaries. Iteratively, we can orthogonaly project onto the first
+hyperplane. We will conduct our projection by subtracting a projection
+onto a normal vector for each hyperplane. Given a point $x$, a
+hyperplane $p_i$ and its normal vector $v_i$, we define 
+\begin{align}
+\vectorproj[p_i]{(x)} &= x - x \cdot v_i
+\end{align}
+The normal vectors for our wedge come in two forms. For the orthant,
+all of the normals are of the form $v_i = e_i$. For the angled wedge planes,
+they are all of the form $w_i = e_i \cos(\theta_i) - e_1
+\sin(\theta_i)$ where $i > 1$. We immediately note that $v_i \cdot v_j
+= 0$ for every natural number $i$ and $j$ less than the number of
+planes $k$. However,
+\begin{align}
+  w_i \cdot w_j &= \langle e_i \cos(\theta_i) - e_1 \sin(\theta_i), e_j
+                  \cos(\theta_j) - e_1 \sin(\theta_j)\rangle\\
+                &= e_ie_j\cos(\theta_i)\cos(\theta_j) -
+                  e_1e_j\cos(\theta_j)\sin(\theta_j) - e_1e_i
+                  \cos(\theta_i)\sin(\theta_j) +
+                  e_1^2\sin(\theta_j)\sin(\theta_i)\\
+                &= e_1 \sin(\theta_j)\sin(\theta_i)\\
+\end{align}
+This means that none of the $w_j$ are orthogonal to each-other and
+furthermore 
+\begin{align}
+  v_1 \cdot w_i &= \langle e_1, -e_1 \sin(\theta_i) + e_i
+                  \cos(\theta_i) \rangle \\
+                  &= -\sin(\theta_i)
+\end{align}
+We will leave this latter lack or orthogonality for last, and start by
+determining how to sequentially orthogonally project onto the
+$w_j$. Critically, we need only project onto the intersection of each
+$w_i$ with all previously projected $w_j$. We begin by projecting
+from within the plane defined by $w_i$ onto the plane defined by
+$w_j$. These vectors are not orthogonal, so we must derive a new
+plane and its normal vector $w_{ij}$ which is still orthogonal to $w_i$ but
+shares the same intersection with the plane defined by $w_j$ along the
+same edge. The conditions that must be satisfied are: 
+\begin{align}
+  w_{ij} \cdot w_j &= 0 \\
+  w_{ij} \perp \cap(w_i, w_j)\\
+  w_{ij} \cdot (e_1 + e_i \tan \theta_i + e_j \tan \theta_j) &= 0
+\end{align}
+This third condition is the requirement that $w_{ij}$ is orthogonal to all
+vectors in the intersection of planes $i$ and $j$.
+
+We'll attempt to solve these equations by using a variable $a$ to
+account for the discrepency needed to solve these equations. 
+\begin{align}
+  w_{ij} &= w_j + a = e_j \cos \theta_j - e_1 \sin \theta_j + a\\
+  a &= a_1e_1 + a_2e_2 + \cdots a_n e_n \\
+  w_{ij} \cdot w_i &= \sin \theta_j\sin\theta_i - a_1 \sin\theta_j +
+                     a_i \cos \theta_i = 0\\
+  w_{ij} \cdot (e_1 + e_i \tan \theta_i + e_j \tan \theta_j) &= a_1 -
+                                                               a_i
+                                                               \tan
+                                                               \theta_i
+                                                               + a_j
+                                                               \tan \theta_j
+\end{align}
+Letting $a_1 \neq 0$ requires that $a = e_1 \sin \theta_j - e_j \cos
+\theta_j$ which is a degenerate case, so let $a_1 = 0$. For every
+$a_k$ not involved in the intersection of planes, they will have zero
+dot product, so we can let them all be 0. Then
+\begin{align}
+  -a_i \cos \theta_i &= \sin \theta_j \sin \theta_i\\
+  a_i &= -\sin \theta_j \tan \theta_i\\
+  a_j \tan \theta_j &= \sin \theta_j \tan^2 \theta_i\\
+  a_j &= \cos \theta_j \tan^2 \theta_i\\
+  w_{ij} &= w_j - e_i \sin \theta_j \tan \theta_i + e_j \cos \theta_j
+           \tan^2 \theta_i
+\end{align}
+Projecting once more onto $w_{k}$ which also shares an intersection
+with $w_i$ and $w_j$, we gain one parameter and one degree of
+freedom.
+\begin{align}
+  w_{ijk} &= w_k + a = e_k \cos \theta_k - e_1 \sin \theta_k + a\\
+  a &= a_1e_1 + a_2e_2 + \cdots a_n e_n \\
+  w_{ijk} \cdot w_i &= \sin \theta_k\sin\theta_i - a_1 \sin\theta_k +
+                     a_i \cos \theta_i = 0\\
+  w_{ijk} \cdot w_j &= \sin \theta_k\sin\theta_j - a_1 \sin\theta_j +
+                     a_j \cos \theta_j = 0\\
+  w_{ijk} \cdot (e_1 + e_i \tan \theta_i + e_j \tan \theta_j) &= a_1 +
+                                                               a_i
+                                                               \tan
+                                                               \theta_i
+                                                               + a_j
+                                                               \tan
+                                                                \theta_j
+                                                                + a_k
+                                                                \tan \theta_k
+\end{align}
+Now, again letting $a_1 = 0$ to avoid a degenerate case and letting
+all other components of $a$ be zero, we have:
+\begin{align}
+  -a_i \cos \theta_i &= \sin \theta_k \sin \theta_i\\
+  a_i &= -\sin \theta_k \tan \theta_i\\
+  -a_j \cos \theta_j &= \sin \theta_k \sin \theta_j\\
+  a_j &= -\sin \theta_k \tan \theta_j\\
+  a_k \tan \theta_k &= \sin \theta_k \tan^2 \theta_i + \sin \theta_k \tan^2 \theta_j\\
+  a_k &= \cos \theta_k (\tan^2 \theta_i + \tan^2 \theta_j)\\
+  w_{ij} = w_j &- e_i \sin \theta_k \tan \theta_i\\
+              &- e_j \sin \theta_k \tan \theta_j\\
+              &+ e_k \cos \theta_k (\tan^2 \theta_i + \tan^2 \theta_j)
+\end{align}
+We see now that we can project an arbitrary sequence of such
+intersecting surfaces with each $w_{i...k}$ with $a_i = -\sin \theta_k
+\tan \theta_i$ for $i$ less than $k$ and $a_k = \cos \theta_k (\sum_{i
+  = 1}^k\tan^2 \theta_i)$. 
+Now for our projection algorithm, we first determine if all planes are
+satisfied ($x \cdot v_i \geq 0$ and $x \cdot w_i \leq 0$ for every
+$i$.) If they are, then we will project onto each plane and pick the
+nearest point. If they are not all satisfied, now we'll check each
+pair of planes $w_i$ and $v_i$. If both are satisfied, we will skip
+them, if both are violated, we will set the coordinate in their native
+direction $e_i$ to 0. When only one of the two planes for all compute all planes that are
+violated by the position of each query point. For each pair of related
+planes $w_i$ and $v_i$, there are three cases. Both satisfied, Both
+violated, or either or. In the case that both are violated, i.e. $x
+\cdot v_i < 0$, then $x_1 < 0$, which is to say the nearest point
+within the wedge in these coordinates will be on the origin. When both
+conditions are satisfied, we will ignore this plane except 
+
+
+%%%%%%%%%%%%%%%%
+
+Now, performing orthogonal projection,
+we can orthogonally project in sequence for all half-planes not
+containing $x$ except for $v_1$ since $e_1$ is not orthogonal to any
+of the wedge planes. Once we have projected onto all other violated
+planes, if the projection onto $e_1$ is negative, this will mean that
+the nearest point to $x$ is the origin. For $i \neq 1$, all these
+projections are of the first form. $x - \sum_{i} x \cdot e_i$. The
+first projection of the second form can be done by simple orthogonal
+projection, however in order to perform the next projection, we must
+project onto the intersection of the two half-planes without leaving
+the first plane. We'll need a new plane which is orthogonal to the
+first plane, but has the same intersection with the second plane. We
+can compute what is missing to make this projection orthogonal. We
+have
+\begin{align}
+  w_i \cdot w_j &= \langle e_i \sin(\theta_i) - e_1 \cos(\theta_i), e_j
+                  \sin(\theta_j) - e_1 \cos(\theta_j)\rangle\\
+                &= e_ie_j\sin(\theta_i)\sin(\theta_j) -
+                  e_1e_j\sin(\theta_j)\cos(\theta_j) - e_1e_i
+                  \sin(\theta_i)\cos(\theta_j) +
+                  e_1^2\cos(\theta_j)\cos(\theta_i)\\
+                &= e_1 \cos(\theta_j)\cos(\theta_i)\\
+\end{align}
+
+We can solve for a perturbation in the $e_1$ direction which will make
+these two normal vectors orthogonal but due to preserving 
+
+
+
+
 \section{exploring boundary curvature with Random Walks}
 
 To analyze decision boundary curvature, we will project samples of points onto the decision boundary and then use Singular Value Decomposition to analyze the \emph{projected points}. In general, this process will involve first selecting two images $x_1$ and $x_2$ for which $C(x_1) \neq C(x_2)$. A point $x_b$ for which $C(x_b)$ is ambiguous between $C(x_1)$ and $C(x_2)$. The resulting sample $X$ will be projected to the decision boundary by either computing a loss function that is minimized when each of the classes $C(X)$ flip from $C(x_1)$ to $C(x_2)$ or vice versa respectively and performing gradient descent, or by interpolating to the parent point of opposite class (so for $x \in X$, if $C(x) = C(x_1)$, we will interpolate from $x$ to $x_2$). 
@@ -1201,10 +1678,6 @@ We also wish to augment these tools to include
 
 \section{sampling decision boundaries and analyzing dimensionality
 with PCA}
-\subsection{Orthant and Skewed Orthant}
-
-In order to study decision boundaries, we must talk about two
-properties related to how decision boundaries interact. 
 
 \section{neural network attack gradients versus decision boundaries}
 
@@ -1213,6 +1686,590 @@ properties related to how decision boundaries interact.
 \section{Relate skewness with dimpled manifold and features not bugs papers}
 
 \part{Model Geometry}
+
+\section{Neural Networks are (Mostly) Kernel Machines}
+
+\begin{abstract}
+In this work, we write an exact representation for an arbitrary gradient trained model as a kernel based method extending the theory of the path kernel described in ~\cite{domingos2020} and discussed by \cite{chen2021equivalence}. We discuss the conditions under which this representation is exact, measure approximation error, and compare to the well known Neural Tangent Kernel (NTK) ~\cite{jacot2018neural}. We implement this representation for an artificial neural network and demonstrate that it is computationally tractable and accurate in practice. Using this kernel, we quantify uncertainty according to this kernel using Gaussian process regression and discuss the implicit limitations that this reveals about neural networks. In particular, we show that the kernel resulting from a typical neural network is non-stationary and has highly unusual spatial properties. 
+\end{abstract}
+
+%\tableofcontents
+%\flushleft
+
+\section{Introduction}
+TODO rewrite to focus on the seconod paper. 
+
+This study investigates the relationship between kernel methods and models whose parameters are determined using gradient methods. The neural tangent kernel (NTK) is a well established method which represents training gradients as a kernel method \cite{jacot2018neural} and compares trained models with this kernel in the case of models as their number of parameters approaches infinity. A theory of the neural path kernel (NPK) has been proposed which integrates finite tangent kernels \cite{domingos2020every}. The path kernel extends from the NTK by directly constructing a kernel method approximation of a model by integrating tangent kernels along the continuous gradient flow defined by the model's gradient with respect to its training data and loss function. The case is made that this continuous path kernel is an exact representation of a continuous gradient trained model and that any practical model trained using discrete steps according to gradient descent is  therefore approximately a kernel method. This opens up such models, including artificial neural networks (ANNs), to many theoretical tools available to kernel methods (\cite{ghojogh2021, shawe2004kernel, zhao2005extracting}). However usage of such tools is highly dependent on the accuracy and dynamics of this approximation. Furthermore, the smooth path kernel requires difficult measurements of convergence and error in order to make practical comparisons with real discretely trained models. Although the convergence argued for likely holds as training step size converges to zero, these arguments do not help us understand the dynamics of this convergence and are very difficult to compute in practice. 
+
+In this work we propose an exact kernel representation for any gradient trained model satisfying very few conditions and demonstrate that this method is computable, practical, and exposes convergence and approximation properties to rigorous analysis. Our results demonstrate the potential for using the path kernel to study deep neural networks and provide a foundation for further research in this area. Furthermore, we will discuss relaxations of the required conditions on this kernel that allows very general functions to be represented with a small measurable approximation that can be bounded in practice. In addition, we study methods for approximating our discrete path kernel to reduce computation costs while maintaining many of these useful properties.
+
+\section{Related Work}
+
+\cite{he2020bayesian} NTK % TODO
+
+\section{Discrete Path Kernels}
+
+Models trained by gradient descent can be characterized by a discrete set of intermediate states in the space of their parameters. These states are not bound to the gradient flow defined for such models, so we must consider how to integrate a discrete path for weights whose states differ from the gradient flow. In order to write this representation we must carefully define both kernel methods and kernels:
+
+\begin{definition}
+A {kernel} is a function of two variables which is symmetric and positive definite. 
+\end{definition}
+
+\begin{definition}
+Given a Hilbert space $X$, a query point $x \in X$, and a training set $X_T \subset X$, a \emph{Kernel Method} is a model characterized by 
+\begin{align}
+    \hat y(x) = b + \sum_{i} a_i k(x,x_i)
+\end{align}
+where the $a_i \in \mathbb{R}$ do not depend on $x$, $b \in \mathbb{R}$ is a constant, and $k$ is a kernel. 
+\end{definition}
+
+By Mercer's theorem ~\cite{ghojogh2021} a kernel can be produced by composing an inner product on a Hilbert space with a mapping $\phi$ from the space of data into the chosen Hilbert space. We will first derive a kernel which is an exact representation of the change in model output over one training step, and then compose our final representation by summing along the finitely many steps. 
+
+\begin{definition}
+Let $ y_{w}$ be a differentiable function parameterized by $w \in \mathbb{R}^d$ which is trained via $N$ forward Euler steps of fixed size $\varepsilon$ on a finite subset $X_T = \{x_i\}_{i=1}^M$ of a Hilbert space $X$ of size $M$ with labels $Y_T = \{y_i\}_{i=1}^M$, with initial parameters $w_0$ so that there is a constant $b \in \mathbb{R}$ such that for all $x$, $ \hat y_{w_0}(x) = b$, and weights at each step ${w_s : 0 \leq s \leq N}$. Let $x \in X$ be arbitrary and within the domain of $\hat y_w$ for every $w$. Then the \emph{discrete path kernel} (DPK) can be written  
+\begin{equation}
+ K_{\text{DPK}}(x, x') = \int_0^1\langle \phi_{s,t}(x), \phi_{s,t}(x')\rangle dt
+\end{equation}
+where
+\begin{align}
+a_{i, s} &= -\varepsilon  \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i} \in \mathbb{R} \\
+\phi_{s,t}(x) &=  \nabla_w \hat y_{w_s(t,x)} (x)\\
+w_s(t,x) &= \begin{cases} w_s, x \in X_T\\ w_s(t), x \notin X_T \end{cases}
+\end{align}
+\end{definition}
+\begin{restatable}{lemma}{ker}
+The discrete path kernel (DPK) is a kernel.
+\end{restatable}
+% \begin{proof}
+% We must show that the associated kernel matrix $K_{\text{DPK}} \in \mathbb{R}^{n\times n}$ defined for an arbitrary subset of data $\{x_i\}_{i=1}^M \subset X$ as $K_{\text{DPK},i,j} = \int_0^1\langle \phi_{s,t}(x_i), \phi_{s,t}(x_j)\rangle dt$ is both symmetric and positive semi-definite.
+
+% Since the inner product on a Hilbert space $\langle \cdot, \cdot \rangle$ is symmetric and since the same mapping $\varphi$ is used on the left and right, $K_{\text{DPK}}$ is \textbf{symmetric}. 
+
+% To see that $K_{\text{DPK}}$ is \textbf{Positive Semi-Definite}, let $f = (f_1, f_2, \dots, f_n)^\top \in \mathbb{R}^n$ be any vector. We need to show that $f^\top K_{\text{DPK}} f \geq 0$. We have
+
+% \begin{align*}
+% f^\top K_{\text{DPK}} f &= \sum_{i=1}^n \sum_{j=1}^n f_i f_j \int_0^1 \langle \phi_{s,t}(x_i), \phi_{s,t}(x_j)\rangle dt \\
+% &= \sum_{i=1}^n \sum_{j=1}^n f_i f_j \int_0^1 \langle \nabla_{w}\hat{y}_{w_s(t,x_i)}, \nabla{w}\hat{y}_{w_s(t,x_j)}\rangle dt \\
+% &= \int_0^1 \sum_{i=1}^n \sum_{j=1}^n f_i f_j \langle \nabla_{w}\hat{y}_{w_s(t,x_i)}, \nabla_{w}\hat{y}_{w_s(t,x_j)}\rangle dt \\
+% &= \int_0^1 \sum_{i=1}^n \sum_{j=1}^n  \langle f_i \nabla_{w}\hat{y}_{w_s(t,x_i)}, f_j \nabla_{w}\hat{y}_{w_s(t,x_j)}\rangle dt \\
+% &= \int_0^1    \langle \sum_{i=1}^n f_i \nabla_{w}\hat{y}_{w_s(t,x_i)}, \sum_{j=1}^n f_j \nabla_{w}\hat{y}_{w_s(t,x_j)}\rangle dt \\
+% & \text{Re-ordering the sums so that their indices match, we have}\\
+% &= \int_0^1 \left\lVert \sum_{i=1}^n f_i \nabla_{w}\hat{y}_{w_s(t,x_i)}\right\rVert^2 dt \\
+% &\geq 0,
+% \end{align*}
+
+% We note that this reordering does not depend on the continuity of our mapping function $\phi_{s,t}(x_i)$. 
+% \end{proof}
+\begin{restatable}[Exact Kernel Representation]{theorem}{ekr}
+\label{thm:ekr}
+A model $\hat y_{w_N}$ trained using discrete steps matching the conditions of the discrete path kernel has the following exact kernel method representation:
+\begin{equation}
+\hat y_{w_N}(x) = b + \sum_{i = 1}^{M}\sum_{s = 1}^N a_{i,s} K_{\text{DPK}}(x, x')
+\label{exact}
+\end{equation}
+\end{restatable}
+% \begin{tikzpicture}
+% \node[\text{[insert graphic of forward euler with vectors]}
+% \end{tikzpicture}
+
+
+% \begin{theorem}
+% Let $ y_{w}$ be a differentiable function parameterized by parameters $w$ which is trained via $N$ forward Euler steps of fixed size $\varepsilon$ on a finite subset $X_T = \{x_i\}_{i=1}^M$ of a Hilbert space $X$ of size $M$ with labels $Y_T = \{y_i\}_{i=1}^M$, with initial parameters $w_0$ so that there is a constant $b \in \mathbb{R}$ such that $\forall x$, $ y_{w_0}(x) = b$, and weights at each step ${w_s : 0 \leq s \leq N}$. Let $x$ be an arbitrary point in the domain of $\hat y_w$ for every $w$. Then $\hat y_{w_N}$ (the final trained state of the model) has the following exact representation: 
+% \begin{equation}
+% \hat y_{w_N}(x) = b + \sum_{i = 1}^{M}\sum_{s = 1}^N a_{i,s} \int_0^1\langle \phi_{s,t}(x), \phi_{s,t}(x_i)\rangle dt
+% \end{equation}
+% where
+% \begin{align}
+% a_{i, s} &= -\varepsilon  \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i} \in \mathbb{R} \\
+% \phi_{s,t}(x) &=  \nabla_w \hat y_{w_s(t,x)} (x)\\
+% w_s(t,x) &= \begin{cases} w_s, x \in X_T\\ w_s(t), x \notin X_T \end{cases}
+% \end{align}
+% Which is to say that all such models are Kernel Methods. 
+% \end{theorem}
+
+% \begin{proof}
+% Let $\hat y_{w}$ be a differentiable function parameterized by parameters $w$ which is trained via $N$ forward Euler steps of fixed step size $\varepsilon$ on a training dataset $X$ with labels $ Y$, with initial parameters $w_0$ so that there is a constant $b$ such that $\forall x$, $\hat y_{w_0}(x) = b$, and weights at each step ${w_s : 0 \leq s \leq N}$. Let $x$ be an arbitrary point in the domain of $\hat y_w$ for every $w$. For the final trained state of this model $\hat y_{w_N}$, let $y = \hat y_{w_N}(x)$. 
+
+% For one step of training, we consider $y_s  = \hat y_{w_s}(x)$ and $y_{s+1} = \hat y_{w_{s+1}}(x)$. We wish to account for the change $y_{s+1} - y_s$ in terms of a gradient flow, so we must compute $\dfrac{\partial \hat y}{dt}$ for a continuously varying parameter $t$. Since $f$ is trained using forward Euler with a step size of $\varepsilon > 0$, this derivative is determined by a step of fixed size of the weights $w_s$ to $w_{s+1}$. We will parameterize this step in terms of the weights:
+
+% \begin{align}
+%     \dfrac{\partial w_s(t)}{dt} &= (w_{s+1} - w_s)\\   
+%     \int \dfrac{\partial w_s(t)}{dt} dt &= \int (w_{s+1} - w_s)dt\\
+%     w_s(t) &= w_s + t(w_{s+1} - w_s)\\
+% \end{align}
+% Since $f$ is being trained using forward Euler, we can write:
+% \begin{align}
+%     \dfrac{\partial w_s(t)}{dt} &= -\varepsilon \nabla_w L(\hat y_{w_s}(x_i), y_i) = -\varepsilon \sum_{j = 1}^{d} \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial w_j} \label{eq10}
+% \end{align}
+% Applying chain rule and the above substitution, we can write
+% \begin{align}
+%     \dfrac{\partial \hat y}{dt} = \dfrac{d \hat y_{w_s(t)}}{dt} &= \sum_{j = 1}^{d} \dfrac{\partial \hat y}{\partial w_j} \dfrac{\partial w_j}{dt}\\
+% &= \sum_{j = 1}^{d} \dfrac{\partial \hat y_{w_s(t)}(x_i)}{\partial w_j} \left(-\varepsilon \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial w_j}\right)\\
+% &= \sum_{j = 1}^{d} \dfrac{\partial \hat y_{w_s(t)}(x_i)}{\partial w_j} \left(-\varepsilon \sum_{i = 1}^{M}\dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}\dfrac{\partial \hat y_{w_s}(x_i)}{\partial w_j}\right)\\
+% &= -\varepsilon \sum_{i = 1}^{M} \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i} \sum_{j = 1}^{d} \dfrac{\partial \hat y_{w_s(t)}(x_i)}{\partial w_j}  \dfrac{\partial \hat y_{w_s}(x_i)}{\partial w_j}\\
+% &= -\varepsilon \sum_{i = 1}^{M} \dfrac{\partial L(\hat y_{w_s}(_i),  y_i)}{\partial \hat y_i}  \nabla_w \hat y_{w_s(t)}(x) \cdot \nabla_w \hat y_{w_s}(x_i)\\
+% \end{align}
+% Using the fundamental theorem of calculus, we can compute the change in the model's output over step $s$
+% \begin{align}
+%     y_{s+1} - y_s &= \int_0^1 -\varepsilon \sum_{i = 1}^{M} \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}  \nabla_w \hat y_{w_s(t)}(x) \cdot \nabla_w \hat y_{w_s}(x_i)dt\\
+%  &=  -\varepsilon \sum_{i = 1}^{M} \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}  \left(\int_0^1\nabla_w \hat y_{w_s(t)}(x)dt\right) \cdot \nabla_w \hat y_{w_s}(x_i)\\
+% \end{align}
+% For all $N$ training steps, we have
+% \begin{align}
+% y_N &= b + \sum_{s=1}^N y_{s+1} - y_s\\
+% y_N &= \sum_{s = 1}^N -\varepsilon \sum_{i = 1}^{M} \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}  \left(\int_0^1\nabla_w \hat y_{w_s(t)}(x)dt\right) \cdot \nabla_w \hat y_{w_s}(x_i)\\
+% % &= \sum_{i = 1}^{M}\sum_{s = 1}^N -\varepsilon  \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}  \left(\int_0^1\nabla_w \hat y_{w_s(t)}(x)dt\right) \cdot \nabla_w \hat y_{w_s}(x_i)\\
+% % &= \sum_{i = 1}^{M}\sum_{s = 1}^N -\varepsilon  \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}  \int_0^1\left\langle \nabla_w \hat y_{w_s(t)}(x), \nabla_w \hat y_{w_s}(x_i) \right\rangle dt\\ 
+% &= \sum_{i = 1}^{M}\sum_{s = 1}^N -\varepsilon  \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}  \int_0^1\left\langle \nabla_w \hat y_{w_s(t,x)}(x), \nabla_w \hat y_{w_s(t,x_i)}(x_i) \right\rangle dt\\ 
+% &= \sum_{i = 1}^{M}\sum_{s = 1}^N a_{i, s}  \int_0^1 \left\langle \phi_{s,t}(x), \phi_{s,t}(x_i)\right\rangle dt
+% \end{align}
+% Since an integral of a symmetric positive semi-definite function is still symmetric and positive-definie and likewise for discrete sums, this represention is a kernel method. 
+
+% \end{proof}
+
+\textbf{Remark 0} We can see that by changing equation ~\ref{exact} we can produce an exact representation for any discrete optimization scheme that can be written in terms of model gradients. This could include backward Euler, leapfrog, higher order schemes (which are generally intractable for Artificial Neural Networks), and any variation of adaptive step sizes. 
+
+\textbf{Remark 1} \label{rem:asym}$\phi_{s,t}(x)$ depends on both $s$ and $t$, which is non-standard but valid, however an important consequence of this mapping is that the output of this representation is not guaranteed to be continuous. This discontinuity is exactly measuring the error between the model along the discrete path compared with the gradient flow for each step. We can write another function $k'$ which is continuous but not symmetric, but still produces an exact representation:
+\begin{align}
+k'(x, x') = \langle \nabla_w \hat y_{w_s(t)}(x), \nabla_w \hat y_{w_s(0)}(x')\rangle
+\end{align}
+The resulting function is a valid kernel if and only if for every $s$ and every $x$, 
+\begin{align}
+\label{eq:cond}
+    \int_0^1 \nabla_w \hat y_{w_s(t)}(x)dt = \nabla_w \hat y_{w_s(0)}(x)
+\end{align}
+The asymmetry of this function is exactly measuring the disagreement between the discrete steps taken during training with the gradient field defined by the loss function composed with the model. This function is one of several subjects for further study, particularly in the context of gaussian processes whereby the asymmetric matrix corresponding with this function can stand in for a covariance matrix. It may be that gaussian thermostats can be used to repair they asymmetry while accounting for any loss accrued due to disagreement between the discrete steps and the gradient flow or it may be that the not-symmetric analogue of the covariance in this case has physical meaning relative to uncertainty. 
+
+\textbf{Remark 2} In order to obtain an exact representation, one must start with a model that has constant output for all input, i.e. for every $x$ and $\hat y_0(x) = b$ (e.g. an ANN with all weights in the final layer initialized to 0). When relaxing this property, to allow for models that have a non-constant starting output, we note that this representation ceases to be exact. The resulting approximate representation will still agree strongly with the ANN, and will converge quickly in output as the ratio of the length of the training path divided by the step size goes to infinity. In fact this convergence is very rapid and useful approximation will be achieved within typical training length. (TODO : lipshitz argument)
+
+\textbf{Remark 3} We note that since $f$ is being trained using forward Euler, we can write:
+\begin{align}
+    \dfrac{\partial w_s(t)}{dt} &= -\varepsilon \nabla_w L(\hat y_{w_s}(x_i), y_i) = -\varepsilon \sum_{j = 1}^{d} \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial w_j} \label{eq10}
+\end{align}
+In other words, our parameterize of this step depends on the step size $\varepsilon$ and as $\varepsilon \to 0$, we have 
+\begin{align}
+    \int_0^1 \nabla_w \hat y_{w_{s, \varepsilon}(t)}(x)dt \to \nabla_w \hat y_{w_s(0)}(x)
+\end{align}
+In particular, given a model $\hat y$ that admits a Lipshitz constant $K$ this approximation has error bounded by $\varepsilon K$ and a proof of this convergence is direct. 
+
+\section{Experimental Results}
+
+    Our first experiments test the kernel formulation on a dataset 
+    which can be visualized in 2d. These experiments serve as a sanity check
+    and provide an interpretable representation of what the kernel is learning.
+
+    \begin{figure}
+        \centering
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \includegraphics[width=0.95\linewidth]{figures/sample_dataset.pdf}
+        \end{minipage}
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \includegraphics[width=0.95\linewidth]{figures/model_kernel_predictions.pdf}
+        \end{minipage}
+        \caption{On the left is a 2d dataset of points sampled from gaussians with different means. Specifically, class A is normally distributed with $\mu = \left[1, 4\right]$ and $\sigma^2 = 1$ while class B is $\mu = \left[4, 1\right]$ and $\sigma^2 = 1$. 2000 data points were sampled for each class. These values were chosen arbitrarily to provide separation with a limited amount of overlap. On the right is the prediction similarity between the kernel and the original model. This demonstrates that our kernel formulation accurately represents the trained network.}
+        \label{fig:sample_data}
+    \end{figure}
+
+\subsection{Evaluating The Kernel}
+
+    Examples of the kernel values across 4 test points are shown in Figure \ref{fig:kernel}.
+    We are interested in how the kernel is learning and whether this kernel will allow out-of-distribution (OOD) detection.
+
+    \begin{figure}[!htb]
+        \centering
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            % \begin{wrapfigure}{l}
+            \includegraphics[width=0.95\linewidth]{figures/in_distribution_uncertan.pdf}
+            % \caption{In Distribution}
+            % \end{wrapfigure}
+            % \captionof{figure}{Figure 1 is a figure}
+        \end{minipage}
+            \begin{minipage}{0.45\textwidth}
+                \centering
+                \includegraphics[width=0.95\linewidth]{figures/ood_positive_2.pdf}
+                % \captionof{figure}{Figure 1 is a figure}
+            \end{minipage}
+    %   \caption{Another figure caption.}
+    % \end{figure}
+
+    % \begin{figure}
+        \centering
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \includegraphics[width=0.95\linewidth]{figures/in_distribution.pdf}
+            \captionsetup{labelformat=empty}
+            \captionof{figure}{In-Distribution}
+            \addtocounter{figure}{-1}
+            \end{minipage}
+            \begin{minipage}{0.45\textwidth}
+                \centering
+                \includegraphics[width=0.95\linewidth]{figures/ood.pdf}
+            \captionsetup{labelformat=empty}
+            \captionof{figure}{Out-Of-Distribution}
+            \addtocounter{figure}{-1}
+            \end{minipage}
+        \caption{Example of the kernel values on in-distribution and out-of-distribution (OOD) data. Left column shows samples which are in-distribution for our dataset. Right column row shows OOD samples.}
+        \label{fig:kernel}
+    \end{figure}
+    From these plots we see that the in-distribution samples have a significantly higher sum over kernel distances than the OOD examples. Of note is that the OOD detection is not perfect. For the test point $\left(4.0, 15.0\right)$ it still identifies a large portion of class A samples as being relatively close in kernel space. Despite this, both OOD examples shown are significantly lower in total kernel distance than the in-distribution samples. Further experiments will be required to better understand why some OOD regions are closer than others
+
+\subsection{Extending To Image Data}
+
+
+    We perform experiments on MNIST to demonstrate the applicability to image data. 
+    This kernel representation was generated for a two-layer fully connected ReLU Network with the cross-entropy loss-function, using Pytorch (citation). The model was trained using forward Euler (gradient descent) using gradients generated as a sum over all training data for each step. The state of the model was saved for every training step. In order to compute the per-training-point gradients needed for the kernel representation, the per-input jacobians are computed at execution time in the representation by loading the model for each training step $i$ , computing the jacobians for each training input to compute $\nabla_w \hat y_{w_s(0)}(x_i)$, and then repeating this procedure for 100 $t$ values between 0 and 1 in order to approximate $\int_0^1 \hat y_{w_s(t)}(x)$. Torch is not currently optimized to provide per-input jacobians or to provide jacobians for multiple weight states, so this procedure can be accelerated greatly by deeper integration with existing pytorch tools. 
+    
+    We are able to see the agreement between the neural network and its kernel representation in  figure ~\ref{fig:agree}. In figure ~\ref{fig:near} we see that the function learned by the kernel does not directly mimic euclidean distance in the image space. Samples which are nearby in kernel space are not necessarily nearby in pixel space. The similarity metric learned is a direct explanation of how the neural network is making decisions.
+
+        \begin{figure}
+        \centering
+        \begin{minipage}{0.2\textwidth}
+            \centering
+            \includegraphics[width=0.95\linewidth]{figures/samples/original_0.png}
+            % \captionof{figure}{Figure 1 is a figure}
+        \end{minipage}
+        \begin{minipage}{0.2\textwidth}
+            \centering
+            \includegraphics[width=0.95\linewidth]{figures/samples/8409_0.png}
+            % \captionof{figure}{Figure 1 is a figure}
+        \end{minipage}
+        \begin{minipage}{0.2\textwidth}
+            \centering
+            \includegraphics[width=0.95\linewidth]{figures/samples/euclid_12516_0.png}
+            % \captionof{figure}{Figure 1 is a figure}
+        \end{minipage} \\
+        \vspace{.2cm}
+    %   \caption{Another figure caption.}
+        \centering
+        \begin{minipage}{0.2\textwidth}
+            \centering
+            \includegraphics[width=0.95\linewidth]{figures/samples/original_1.png}
+            \captionsetup{labelformat=empty}
+            \captionof{figure}{Original Image}            % \captionof{figure}{Figure 1 is a figure}
+            \addtocounter{figure}{-1}
+        \end{minipage}
+        \begin{minipage}{0.2\textwidth}
+            \centering
+            \includegraphics[width=0.95\linewidth]{figures/samples/322_0.png}
+            \captionsetup{labelformat=empty}
+            \captionof{figure}{Kernel Distance}            % \captionof{figure}{Figure 1 is a figure}
+            \addtocounter{figure}{-1}
+        \end{minipage}
+        \begin{minipage}{0.2\textwidth}
+            \centering
+            \includegraphics[width=0.95\linewidth]{figures/samples/euclid_3233_1.png}
+            % Pixel Distance
+            \captionsetup{labelformat=empty}
+            \captionof{figure}{Pixel Distance}
+            \addtocounter{figure}{-1}
+        \end{minipage}
+      \caption{Comparison between the nearest samples in kernel space and pixel space. From left to right in each column: Test set point, nearest sample in kernel space, nearest sample in pixel space using euclidean distance.}
+      \label{fig:near}
+    \end{figure}
+    
+    % \begin{figure}
+    % \end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=8cm]{img/image.png}
+\caption{This plot shows output of the ANN versus output of the corresponding kernel representation for a set of test images from the MNIST dataset. We note the very strong agreement between the two outputs.}  
+\label{fig:agree}
+\end{figure}
+
+
+
+%I will leave it to michael to add any out-of-sample plots and plots related to $a_{i,s}$ weights and such. 
+
+\section{Discussion}
+
+The implications of a practical and finite kernel representation for neural networks are wide and profound. For most gradient trained models, there is a disconnect between the problem space (e.g. images) and the parameter space of a network. Parameters are intrinsically un-interpretable and much work has been spent building approximate mappings that convert model understanding back into the problem space in order to interpret features, sample importance, and other details (~\cite{simonyan2013deep}, ~\cite{lundberg2017unified}, and ~\cite{Selvaraju_2019}). A kernel is composed of a direct mapping from the problem space into parameter space. This mapping allows much deeper understanding of gradient trained models because the internal state of the method has an exact representation mapped from the problem space. Sample importance is produced directly by looking at the kernel and its corresponding weights per training input. 
+
+As stated in previous work ~\cite{domingos2020}, this representation has strong implications about the structure of gradient trained models and how they can understand the problems that they solve. Since the kernel weights in this representation are fixed derivatives with respect to the loss function $L$, $a_{i, s} = -\varepsilon  \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}$ nearly all of the information used by the network is represented by the kernel mapping function and inner product. Inner products are not just measures of distance, they also measure angle. In fact, figure \ref{fig:grad} shows that for a typical training example, the $L_2$ norm of the weights changes monotonically by only 20-30\% during training. This means that the "learning" of a gradient trained model is dominated by change in angle, which is predicted for kernel methods in high dimensions ~\cite{hardle2004nonparametric}.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=12cm]{img/stab-n-201mnist-C32-100-100-10-0.001-0.0001-eval-mod_int_acc-trn.png}
+\caption{This plot shows a linear interpolation $w(t) = w_0 + t(w_{1} - w_0)$ of model parameters $w$ for a convolutional neural network $\hat y_w$ from their starting random state $w_0$ to their ending trained state $w_1$. The hatched blue line shows the dot product of the aggregated gradient over the training data $X$, $\langle \nabla_w \hat y_{w(t)}(X), (w_1 - w_0)/|w_1 - w_0| \rangle$. The other lines indicate accuracy (blue), total loss (red decreasing), and L2 Regularization (red increasing)}  
+\label{fig:grad}
+\end{figure}
+
+Perhaps the most significant advantage for gradient trained models of an exact kernel representation is that the combination of kernel and kernel weights provides a spatial representation of the model's understanding relative to the training data. In previous work (~\cite{gillette2022data} ~\cite{yousefzadeh2021deep} it has been shown that image classification can be represented by projection onto the convex hull of training data. This projection is computationally infeasible, but it provides a geometric gold-standard classifier. Since kernel methods provide a spatial representation of their prediction, this representation can be directly compared with convex hull projections. It also provides data through which we can infer the gradient model's understanding of the data spatially. 
+
+For kernel methods, this also represents a significant step. Despite their firm mathematical foundations, kernel methods have lost ground since the early 2000s due to the limitations of developing new kernels for complex high-dimensional problems ~\cite{NIPS2005_663772ea}. This opens up many modern problems to the powerful tools available to kernel methods. Of these, Gaussian Processes (GPs) may be the most exciting. Given our kernel function, we can generate covariance matrices for GP which will allow direct uncertainty measurement. This will allow much more significant analysis for out-of-distribution samples including adversarial attacks (~\cite{szegedy2013intriguing} ~\cite{ilyas2019adversarial}). 
+
+Gaussian processes are one of many research directions that naturally follow this work. It is worth noting that since the kernel from our representation can be either continuous or symmetric but not both (See remark ~\ref{rem:asym}), covariance matrices used in GPs will have slightly unusual properties that will reflect the divergence of the discrete training path from the smooth gradient flow. In the case of the asymmetric version of our representation, this asymmetry measures this divergence in a way that may be tractably explored using gaussian thermostats (~\cite{scherer2020kernel}, ~\cite{nose1990constant}). In addition to exploring GPs, it is natural to pursue more efficient computation of these representations by exploiting features of pytorch and incorporating the necessary integral computation with some codes that have been developed for NeuralODEs which require similar information (~\cite{bilovs2021neural}, ~\cite{neuralode2018})
+
+Another implication from this representation is the increased importance of models following their gradient flow during training. Since this derived kernel is either discontinuous or asymmetric depending on the neural network's training trajectory, developing training restrictions which satisfy equation ~\ref{eq:cond} may produce more useful kernels and have implications about the accuracy and generalizability of ANN models. This will provide a new motivation for such research separate from just the question of efficiency of training. Approaches in this direction may be found in control theory (~\cite{lin2020gradient}) and the neural ODE approach (~\cite{bilovs2021neural}, ~\cite{neuralode2018}). Also in this vein is the precise formulation of the divergence error from the discrete training path to the smooth gradient flow. Such a formulation should shed light on the dynamics of how such representations converge in performance under various step refinements. 
+
+\section{Acknowledgements}
+
+This research was funded by Los Alamos National Lab LDRD-DR XX9C UQ4ML (help with how to acknowledge this LDRD funding juston?) Thanks to Yen Ting Lin, Philip Hoskins, Keenan Eikenberry, and Craig Thompson for feedback on early iterations of this paper. 
+
+\bibliographystyle{plainnat}
+\bibliography{bibfile}
+
+\appendix
+
+
+\section{Appendix}
+
+ex
+\subsection{The DPK is a Kernel}
+
+\ker*
+\begin{proof}
+We must show that the associated kernel matrix $K_{\text{DPK}} \in \mathbb{R}^{n\times n}$ defined for an arbitrary subset of data $\{x_i\}_{i=1}^M \subset X$ as $K_{\text{DPK},i,j} = \int_0^1\langle \phi_{s,t}(x_i), \phi_{s,t}(x_j)\rangle dt$ is both symmetric and positive semi-definite.
+
+Since the inner product on a Hilbert space $\langle \cdot, \cdot \rangle$ is symmetric and since the same mapping $\varphi$ is used on the left and right, $K_{\text{DPK}}$ is \textbf{symmetric}. 
+
+To see that $K_{\text{DPK}}$ is \textbf{Positive Semi-Definite}, let $f = (f_1, f_2, \dots, f_n)^\top \in \mathbb{R}^n$ be any vector. We need to show that $f^\top K_{\text{DPK}} f \geq 0$. We have
+
+\begin{align}
+f^\top K_{\text{DPK}} f &= \sum_{i=1}^n \sum_{j=1}^n f_i f_j \int_0^1 \langle \phi_{s,t}(x_i), \phi_{s,t}(x_j)\rangle dt \\
+&= \sum_{i=1}^n \sum_{j=1}^n f_i f_j \int_0^1 \langle \nabla_{w}\hat{y}_{w_s(t,x_i)}, \nabla{w}\hat{y}_{w_s(t,x_j)}\rangle dt \\
+&= \int_0^1 \sum_{i=1}^n \sum_{j=1}^n f_i f_j \langle \nabla_{w}\hat{y}_{w_s(t,x_i)}, \nabla_{w}\hat{y}_{w_s(t,x_j)}\rangle dt \\
+&= \int_0^1 \sum_{i=1}^n \sum_{j=1}^n  \langle f_i \nabla_{w}\hat{y}_{w_s(t,x_i)}, f_j \nabla_{w}\hat{y}_{w_s(t,x_j)}\rangle dt \\
+&= \int_0^1    \langle \sum_{i=1}^n f_i \nabla_{w}\hat{y}_{w_s(t,x_i)}, \sum_{j=1}^n f_j \nabla_{w}\hat{y}_{w_s(t,x_j)}\rangle dt \\
+& \text{Re-ordering the sums so that their indices match, we have}\\
+&= \int_0^1 \left\lVert \sum_{i=1}^n f_i \nabla_{w}\hat{y}_{w_s(t,x_i)}\right\rVert^2 dt \\
+&\geq 0,
+\end{align}
+
+Note that this reordering does not depend on the continuity of our mapping function $\phi_{s,t}(x_i)$.
+
+\end{proof}
+
+\textbf{Remark} In the case that our mapping function $\varphi$ is not symmetric, after re-ordering, we still yield something of the form:
+\begin{align}
+&= \int_0^1 \left\lVert \sum_{i=1}^n f_i \nabla_{w}\hat{y}_{w_s(t,x_i)}\right\rVert^2 dt \\
+\end{align}
+The natural asymmetric $\varphi$ is symmetric for every non-training point, so we can partition this sum. For the non-training points, we have symmetry, so for those points we yield exactly the $L^2$ metric. For the remaining points, if we can pick a Lipschitz constant $E$ along the entire gradient field, then if training steps are enough, then the integral and the discrete step side of the asymmetric kernel will necessarily have positive inner product. In practice, this Lipschitz constant will change during training and for appropriately chosen step size (smaller early in training, larger later in training) we can guarantee positive-definiteness. In particular this only needs to be checked for training points. 
+
+\subsection{The DPK is an Exact Representation}
+
+\ekr*
+\begin{proof}
+
+Let $\hat y_{w}$ be a differentiable function parameterized by parameters $w$ which is trained via $N$ forward Euler steps of fixed step size $\varepsilon$ on a training dataset $X$ with labels $ Y$, with initial parameters $w_0$ so that there is a constant $b$ such that for every $x$, $\hat y_{w_0}(x) = b$, and weights at each step ${w_s : 0 \leq s \leq N}$. Let $x \in X$ be arbitrary and within the domain of $\hat y_w$ for every $w$. For the final trained state of this model $\hat y_{w_N}$, let $y = \hat y_{w_N}(x)$. 
+
+For one step of training, we consider $y_s  = \hat y_{w_s}(x)$ and $y_{s+1} = \hat y_{w_{s+1}}(x)$. We wish to account for the change $y_{s+1} - y_s$ in terms of a gradient flow, so we must compute $\dfrac{\partial \hat y}{dt}$ for a continuously varying parameter $t$. Since $f$ is trained using forward Euler with a step size of $\varepsilon > 0$, this derivative is determined by a step of fixed size of the weights $w_s$ to $w_{s+1}$. We will parameterize this step in terms of the weights:
+
+\begin{align}
+    \dfrac{\partial w_s(t)}{dt} &= (w_{s+1} - w_s)\\   
+    \int \dfrac{\partial w_s(t)}{dt} dt &= \int (w_{s+1} - w_s)dt\\
+    w_s(t) &= w_s + t(w_{s+1} - w_s)\\
+\end{align}
+Since $f$ is being trained using forward Euler, we can write:
+\begin{align}
+    \dfrac{\partial w_s(t)}{dt} &= -\varepsilon \nabla_w L(\hat y_{w_s}(x_i), y_i) = -\varepsilon \sum_{j = 1}^{d} \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial w_j} \label{eq10}
+\end{align}
+Applying chain rule and the above substitution, we can write
+\begin{align}
+    \dfrac{\partial \hat y}{dt} = \dfrac{d \hat y_{w_s(t)}}{dt} &= \sum_{j = 1}^{d} \dfrac{\partial \hat y}{\partial w_j} \dfrac{\partial w_j}{dt}\\
+&= \sum_{j = 1}^{d} \dfrac{\partial \hat y_{w_s(t)}(x)}{\partial w_j} \left(-\varepsilon \dfrac{\partial L(\hat y_{w_s}(X_T),  Y_T)}{\partial w_j}\right)\\
+&= \sum_{j = 1}^{d} \dfrac{\partial \hat y_{w_s(t)}(x)}{\partial w_j} \left(-\varepsilon \sum_{i = 1}^{M}\dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}\dfrac{\partial \hat y_{w_s}(x_i)}{\partial w_j}\right)\\
+&= -\varepsilon \sum_{i = 1}^{M} \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i} \sum_{j = 1}^{d} \dfrac{\partial \hat y_{w_s(t)}(x)}{\partial w_j}  \dfrac{\partial \hat y_{w_s}(x_i)}{\partial w_j}\\
+&= -\varepsilon \sum_{i = 1}^{M} \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}  \nabla_w \hat y_{w_s(t)}(x) \cdot \nabla_w \hat y_{w_s}(x_i)\\
+\end{align}
+Using the fundamental theorem of calculus, we can compute the change in the model's output over step $s$
+\begin{align}
+    y_{s+1} - y_s &= \int_0^1 -\varepsilon \sum_{i = 1}^{M} \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}  \nabla_w \hat y_{w_s(t)}(x) \cdot \nabla_w \hat y_{w_s}(x_i)dt\\
+ &=  -\varepsilon \sum_{i = 1}^{M} \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}  \left(\int_0^1\nabla_w \hat y_{w_s(t)}(x)dt\right) \cdot \nabla_w \hat y_{w_s}(x_i)\\
+\end{align}
+For all $N$ training steps, we have
+\begin{align}
+y_N &= b + \sum_{s=1}^N y_{s+1} - y_s\\
+y_N &= b + \sum_{s = 1}^N -\varepsilon \sum_{i = 1}^{M} \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}  \left(\int_0^1\nabla_w \hat y_{w_s(t)}(x)dt\right) \cdot \nabla_w \hat y_{w_s}(x_i)\\
+% &= \sum_{i = 1}^{M}\sum_{s = 1}^N -\varepsilon  \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}  \left(\int_0^1\nabla_w \hat y_{w_s(t)}(x)dt\right) \cdot \nabla_w \hat y_{w_s}(x_i)\\
+% &= \sum_{i = 1}^{M}\sum_{s = 1}^N -\varepsilon  \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}  \int_0^1\left\langle \nabla_w \hat y_{w_s(t)}(x), \nabla_w \hat y_{w_s}(x_i) \right\rangle dt\\ 
+&= b + \sum_{i = 1}^{M}\sum_{s = 1}^N -\varepsilon  \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}  \int_0^1\left\langle \nabla_w \hat y_{w_s(t,x)}(x), \nabla_w \hat y_{w_s(t,x_i)}(x_i) \right\rangle dt\\ 
+&= b + \sum_{i = 1}^{M}\sum_{s = 1}^N a_{i, s}  \int_0^1 \left\langle \phi_{s,t}(x), \phi_{s,t}(x_i)\right\rangle dt
+\end{align}
+Since an integral of a symmetric positive semi-definite function is still symmetric and positive-definie and likewise for discrete sums, this represention is a kernel method. 
+
+\end{proof}
+\subsection{When is an Ensemble of Kernel Machines itself a Kernel Machine?}
+Here we investigate when our derived ensemble of kernel machines composes to a single kernel machine.
+In order to show that a linear combination of kernels also equates to a kernel it is sufficient to show that $sign(a_{i,s}) = sign(a_{i,0})$ for all $a_{i,s}$. 
+In this case it is possible to let the sample weights of our final kernel machine equal $sign(a_{i,0})$.
+In order to show this, we impose some structure on the loss function and network.
+Here we show this is the case for binary crossentropy on a network with sigmoid activations on the logits.
+(TODO: More argument here using mercer's theorem. All positive linear combinations of kernels are kernels. There are cases where some negative coefficients are allowed but that's going to take a lot more thought. How do we extend this to say $aKa > 0$ for all $a$?)
+
+\begin{proof}
+
+\begin{align}
+    L(\hat y_i,  y_i) 
+    &= -  y_i \ln(\hat y_i) - (1 - y_i)\ln(1 - \hat y_i)\\
+    \dfrac{\partial L(\hat y_i,  y_i)}{\partial \hat y_i} &= \dfrac{y_i - \hat y_i}{(\hat y_i - 1) \hat y_i}
+\end{align}
+For a binary classification problem it is standard to have $y_i \in \{0, 1\}$ and using a sigmoid activation on the final layer we have $\hat y_i \in (0, 1)$. \\
+
+\begin{center}
+    
+\begin{minipage}{0.45\textwidth}
+Assume $y_i = 0$.
+\begin{align}
+    \dfrac{\partial L(\hat y_i,  y_i)}{\partial \hat y_i} &= \dfrac{0 - \hat y_i}{(\hat y_i - 1) \hat y_i}\\
+    &= \dfrac{-1}{\hat y_i - 1}\\
+    &= \dfrac{1}{|\hat y_i - 1|}
+\end{align}
+The last equality relies on the fact that $\hat y_i < 1$.
+\begin{equation}
+    y_i = 0 \implies \dfrac{\partial L(\hat y_i,  y_i)}{\partial \hat y_i} > 0
+\end{equation}
+\end{minipage}
+\hspace{0.04\textwidth}
+\begin{minipage}{0.45\textwidth}
+Assume $y_i = 1$.
+\begin{align}
+    \dfrac{\partial L(\hat y_i,  y_i)}{\partial \hat y_i} &= \dfrac{1 - \hat y_i}{(\hat y_i - 1) \hat y_i}\\
+    &= \dfrac{1 - \hat y_i}{-(1-\hat y_i) \hat y_i}\\
+    &= -\dfrac{1}{\hat y_i}
+\end{align}
+Because $\hat y_i > 0$.
+\begin{equation}
+    y_i = 1 \implies \dfrac{\partial L(\hat y_i,  y_i)}{\partial \hat y_i} < 0
+\end{equation}
+\end{minipage}
+\end{center}
+
+This shows that the sign of the gradient of the loss function depends only on the label $y_i$, not on the predicted value of our model $\hat y_i$ and is constant through training. 
+Therefore:
+\begin{align}
+    y_S &= b - \varepsilon \sum_{i = 1}^{N}\sum_{s = 1}^S a_{i, s}  \int_0^1 \left\langle \phi_{s,t}(x), \phi_{s,t}(x_i)\right\rangle dt\\
+     &= b - \varepsilon \sum_{i = 1}^{N}sign(a_{i, 0}) \sum_{s = 1}^S |a_{i, s}| \int_0^1 \left\langle \phi_{s,t}(x), \phi_{s,t}(x_i)\right\rangle dt
+\end{align}
+This formulates a kernel machine where
+\begin{align}
+a_{i, 0} &= sign(\dfrac{\partial L(\hat y_{w_0}(x_i),  y_i)}{\partial \hat y_i}) \in \{-1, 1\} \\
+K(x, x_i) &= \sum_{s = 1}^S |a_{i, s}| \int_0^1 \left\langle \phi_{s,t}(x), \phi_{s,t}(x_i)\right\rangle dt \\
+\phi_{s,t}(x) &=  \nabla_w \hat y_{w_s(t,x)} (x)\\
+w_s(t,x) &= \begin{cases} w_s, x \in X_T\\ w_s(t), x \notin X_T \end{cases}\\
+b &= 0
+\end{align}
+\end{proof}
+
+
+This argument does not hold in the simple case of linear regression. 
+Assume our loss is instead squared error. Our labels are continuous on $\mathds{R}$ and our activation is the identity function.
+\begin{align}
+    L(\hat y_i,  y_i) 
+    &= (y_i - \hat y_{i, s})^2 \\
+    \dfrac{\partial L(\hat y_i,  y_i)}{\partial \hat y_i} &= 2(y_i- \hat y_{i, s})
+\end{align}
+
+This quantity is dependent on $\hat y_i$ and its sign is changing throughout training. (TODO: Make this more formal and rigorous)
+
+In order for 
+\begin{align}
+    \sum_{s=1}^S a_{i,s} \int_0^1 \langle \phi_{s,t}(x), \phi_{s,t}(x_i)\rangle dt
+\end{align}
+to be a kernel on its own, we need it to be a positive (or negative) definite operator. In the specific case of our practical path kernel, i.e. that in $K(x,x')$ if $x'$ happens to be equal to $x_i$, then:
+\begin{align}
+    &= \sum_{s=1}^S 2(y_i- \hat y_{i, s}) \int_0^1 \langle \phi_{s,t}(x), \phi_{s,t}(x_i)\rangle dt\\
+    &= \sum_{s=1}^S 2(y_i- \hat y_{i, s}) \int_0^1 \langle \nabla_w \hat y_{w_s(t))} (x), \nabla_w \hat y_{w_s(0)} (x_i)\rangle dt\\
+    &= \sum_{s=1}^S 2 \left(y_i \cdot \int_0^1 \langle \nabla_w \hat y_{w_s(t))} (x), \nabla_w \hat y_{w_s(0)} (x_i)\rangle dt - \hat y_{i, s} \int_0^1 \langle \nabla_w \hat y_{w_s(t))} (x), \nabla_w \hat y_{w_s(0)} (x_i)\rangle dt \right)\\
+    &= \sum_{s=1}^S 2 \left(y_i \cdot \int_0^1 \langle \nabla_w \hat y_{w_s(t))} (x), \nabla_w \hat y_{w_s(0)} (x_i)\rangle dt -  \int_0^1 \langle \nabla_w \hat y_{w_s(t))} (x), \hat y_{i, s} \nabla_w \hat y_{w_s(0)} (x_i)\rangle dt \right)\\
+    &= \sum_{s=1}^S 2 \left(y_i \cdot \int_0^1 \langle \nabla_w \hat y_{w_s(t))} (x), \nabla_w \hat y_{w_s(0)} (x_i)\rangle dt -  \int_0^1 \langle \nabla_w \hat y_{w_s(t))} (x), \dfrac{1}{2}\nabla_w (\hat y_{w_s(0)} (x_i))^2\rangle dt \right)\\
+\end{align}
+Otherwise, we get the usual 
+\begin{align}
+        &= \sum_{s=1}^S 2(y_i- \hat y_{i, s}) \int_0^1 \langle \nabla_w \hat y_{w_s(t,x))} (x), \nabla_w \hat y_{w_s(t,x)} (x')\rangle dt\\
+\end{align}
+The question is two fold. One, in general theory (i.e. the lower example), can we contrive two pairs $(x_1,x'_1)$ and $(x_2,x'_2)$ that don't necessarily need to be training or test images for which this sum is positive for $1$ and negative for $2$. Second, in the case that we are always comparing against training images, do we get something more predictable since there is greater dependence on $x_i$ and we get the above way of re-writing  using the gradient of the square of $\hat y(x_i)$. 
+
+
+\subsection{Multi-Class Case}
+
+There are two ways of treating our loss function $L$ for a number of classes (or number of output activations) $K$:
+\begin{align}
+    \text{Case 1: } L &: \mathbb{R}^K \to \mathbb{R}\\
+    \text{Case 2: } L &: \mathbb{R}^K \to \mathbb{R}^K\\
+\end{align}
+
+\subsubsection{Case 1 Scalar Loss}
+
+Let $L : \mathbb{R}^K \to \mathbb{R}$. We will be using the chain rule $D (g \circ f) (x) = Dg(f(x))Df(x)$. 
+
+Let $\hat y$ be a vector valued function so that $\hat y : \mathbb{R}^D \to \mathbb{R}^K$  satisfying the conditions from [representation theorem above] with $x \in \mathbb{R}^D$ and $y_i \in \mathbb{R}^K$ for every $i$. We note that $\dfrac{\partial \hat y}{\partial t}$ is a column and has shape $Kx1$ and our first chain rule can be done the old fashioned way on each row of that column:
+\begin{align}
+    \dfrac{\partial \hat y}{\partial t} &= \sum_{j=1}^M \dfrac{\partial \hat y(x)}{\partial w_j} \dfrac{\partial w_j}{\partial t}\\
+    &= -\varepsilon \sum_{j=1}^M \dfrac{\partial \hat y(x)}{\partial w_j} \sum_{i=1}^N \dfrac{\partial L(\hat y(x_i), y_i)}{\partial w_j}\\
+    &\text{Apply chain rule}\\
+    &= -\varepsilon \sum_{j=1}^M \dfrac{\partial \hat y(x)}{\partial w_j} \sum_{i=1}^N \dfrac{\partial L(\hat y(x_i), y_i)}{\partial \hat y}\dfrac{\partial \hat y(x_i)}{\partial w_j}\\
+    &\text{Let}\\
+    A &= \dfrac{\partial \hat y(x)}{\partial w_j} \in \mathbb{R}^{K \times 1}\\
+    B &= \dfrac{\partial L(\hat y(x_i), y_i)}{\partial \hat y} \in \mathbb{R}^{1 \times K}\\
+    C &= \dfrac{\partial \hat y(x_i)}{\partial w_j} \in \mathbb{R}^{K \times 1}
+\end{align}
+We have a matrix multiplication $ABC$ and we wish to swap the order so somehow we can pull $B$ out, leaving $A$ and $C$ to compose our product for the representation. Since $BC \in \mathbb{R}$, we have $(BC) = (BC)^T$ and we can write
+\begin{align}
+    (ABC)^T &= (BC)^TA^T = BCA^T\\
+    ABC &= (BCA^T)^T
+\end{align}
+Note: This condition needs to be checked carefully for other formulations so that we can re-order the product as follows:
+\begin{align}
+        &= -\varepsilon \sum_{j=1}^M  \sum_{i=1}^N \left(\dfrac{\partial L(\hat y(x_i), y_i)}{\partial \hat y} 
+        \dfrac{\partial \hat y(x_i)}{\partial w_j} \left(\dfrac{\partial \hat y(x)}{\partial  w_j}\right)^T\right)^T
+        \\
+    &= -\varepsilon \sum_{i=1}^N \left(\dfrac{\partial L(\hat y(x_i), y_i)}{\partial \hat y} 
+    \sum_{j=1}^M \dfrac{\partial \hat y(x_i)}{\partial w_j} \left(\dfrac{\partial \hat y(x)}{\partial w_j}\right)^T\right)^T\\        
+\end{align}
+Note, now that we are summing over $j$, so we can write this as an inner product on $j$ with the $\nabla$ operator which in this case is computing the jacobian of $\hat y$ along the dimensions of class (index k) and weight (index j). We can define 
+\begin{align}
+    (\nabla \hat y(x))_{k,j} &= \dfrac{\partial \hat y_{k}(x)}{\partial w_j}\\
+    &= -\varepsilon \sum_{i=1}^N \left(\dfrac{\partial L(\hat y(x_i), y_i)}{\partial \hat y} 
+     \nabla \hat y(x_i) (\nabla \hat y(x))^T\right)^T\\    
+\end{align}
+We note that the dimensions of each of these matrices in order are $[1,K]$, $[K,M]$, and $[M,K]$ which will yield a matrix of dimension $[1, K]$ i.e. a row vector which we then transpose to get back a column of shape $[K, 1]$
+
+\subsection{Multi Class Case}
+
+
+In the case where $\hat y$ is a vector we denote the data index by the superscript $y^{[i]}$ and the vector component by the subscript $y_k$.
+
+query point may need to know about other class gradients than the target class. 
+
+k by k
+
+yen ting's approach is needed because we are making some assumption about the model that allows us to measure the query change along a linear path. 
+
+The negative log likelyhood function where $y$ and $\hat y$ are vectors.
+\begin{align}
+    NLL(y, \hat y) = \sum_k^{K} -y_k \ln(\hat y_k)
+\end{align}
+
+\begin{align}
+    \dfrac{\partial \left[ \hat y_0 ... y_k \right]}{dt} &= \sum_{j=1}^M \dfrac{\partial \left[\hat y_0 ... \hat y_k \right]}{\partial w_j} \dfrac{\partial w_j}{dt}\\
+    &= \sum_{j=1}^M \dfrac{\partial \left[\hat y_0 ... \hat y_k \right]}{\partial w_j} \left( -\varepsilon \sum_{i = 1}^N \dfrac{\partial L(\hat y^{[i]}, y^{[i]})}{\partial w_j} \right)\\
+    &= \sum_{j=1}^M \dfrac{\partial \left[\hat y_0 ... \hat y_k \right]}{\partial w_j} \left( -\varepsilon \sum_{i = 1}^N \dfrac{\partial L(\hat y^{[i]}, y^{[i]})}{\partial \left[ \hat y^{[i]}_{0} ... \hat y^{[i]}_{k} \right]} \dfrac{\partial \left[ \hat y^{[i]}_{0} ... \hat y^{[i]}_{k} \right]}{\partial w_j} \right)\\
+    &=  -\varepsilon \sum_{i = 1}^N \dfrac{\partial L(\hat y^{[i]}, y^{[i]})}{\partial \left[ \hat y^{[i]}_{0} ... \hat y^{[i]}_{k} \right]} \sum_{j=1}^M  \dfrac{\partial \left[\hat y_0 ... \hat y_k \right]}{\partial w_j} \dfrac{\partial \left[ \hat y^{[i]}_{0} ... \hat y^{[i]}_{k} \right]}{\partial w_j} 
+\end{align}
+
+Now we use the fact that L is CCE
+\begin{align}
+    \dfrac{\partial L(\hat y^{[i]}, y^{[i]})}{\partial y^{[i]}_k} &= \begin{cases} 0, k \not = y^{[i]}\\ -1 \end{cases}
+\end{align}
+
+\begin{align}
+    \dfrac{\partial \hat y_k}{dt} &=  -\varepsilon \sum_{i = 1}^N 1 \sum_{j=1}^M  \dfrac{\partial \left[\hat y_0 ... \hat y_k \right]}{\partial w_j} \dfrac{\partial \left[ \hat y^{[i]}_{0} ... \hat y^{[i]}_{k} \right]}{\partial w_j} 
+\end{align}
+
+\begin{align}
+    y_0 +  \left[ \dfrac{\partial L(\hat y^{[i]}, y^{[i]})}{\partial y^{[i]}_0} \sum_{j=1}^M \dfrac{\partial f(x_i)_0}{\partial w_j} \cdot\dfrac{\partial f(x)_0}{\partial w_j}, \dfrac{\partial L(\hat y^{[i]}, y^{[i]})}{\partial y^{[i]}_1} \sum_{j=1}^M \dfrac{\partial f(x_i)_1}{\partial w_j} \cdot\dfrac{\partial f(x)_1}{\partial w_j} \right]
+\end{align}
+
+% \begin{align}
+% y_N &= b + \sum_{s=1}^N y_{s+1} - y_s\\
+%     &= b + \sum_{i = 1}^{M}\sum_{s = 1}^N -\varepsilon  \dfrac{\partial L(\hat y_{w_s}(x_i),  y_i)}{\partial \hat y_i}  \int_0^1\left\langle \nabla_w \hat y_{w_s(t,x)}(x), \nabla_w \hat y_{w_s(t,x_i)}(x_i) \right\rangle dt
+% \end{align}
+
+
 \section{Neural Networks are Gaussian Processes}
 With Dropout on, the interpolant from one class to another will go into a variety of other classes. If you make a histogram of the locations where these boundary crossings occur, that will show a gaussian. 
 
